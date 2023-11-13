@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "cardKeys.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -8,7 +9,7 @@
 Game::Game()
   : mWindow(sf::VideoMode(800, 600), "sfml application"), 
     mapOfCardTextures{std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>>()}, 
-    listOfRandomCardKeys{randomizedCardsAsKeys()},
+    listOfCardKeys{cardsAsKeys()},
     listOfFileNames{filesInDirectory()},
     cardsAsSprites{},
     mFont{},
@@ -24,7 +25,8 @@ void Game::Run()
   sf::Clock clock;
   sf::Time timeSinceLastUpdate = sf::Time::Zero;
   sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-  loadCardTexturesToMap(mapOfCardTextures, listOfRandomCardKeys, listOfFileNames);
+  loadCardTexturesToMap(mapOfCardTextures, listOfCardKeys, listOfFileNames);
+  randomizeListOfCardKeys(listOfCardKeys);
   loadFont();
   buttonToDrawCard();
 
@@ -70,8 +72,7 @@ void Game::render(std::vector<sf::Sprite> const & cardsAsSptires)
 
 void Game::loadFont()
 {
-  sf::Font font;
-  if(!font.loadFromFile("arial.ttf")){
+  if(!mFont.loadFromFile("arial.ttf")){
     std::cout << "Error loading font" << '\n';
   }
 }
@@ -87,7 +88,7 @@ void Game::buttonToDrawCard()
 
 void Game::handleButtonToDrawInput(int & countButtonToDrawClicks){
   mText.setFillColor(sf::Color::Blue);
-  updateSpritesFromTextureMapOfCards(cardsAsSprites, listOfRandomCardKeys[countButtonToDrawClicks], mapOfCardTextures);
+  updateSpritesFromTextureMapOfCards(cardsAsSprites, listOfCardKeys[countButtonToDrawClicks], mapOfCardTextures);
   updatePositionOfCardSprites(cardsAsSprites, countButtonToDrawClicks);
 }
 
@@ -147,5 +148,12 @@ void Game::loadCardTexturesToMap(std::unordered_map<cardKeys, std::unique_ptr<sf
     count++;
   }
 }
+
+void Game::randomizeListOfCardKeys(std::vector<cardKeys> & listOfCardKeys)
+{
+  static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
+  std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
+}
+
 
 

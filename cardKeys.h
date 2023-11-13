@@ -3,9 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <random>
-#include <chrono>
-#include <algorithm>
 
 #define numCardsInDeck 52
 
@@ -65,6 +62,6 @@ enum class cardKeys
   queen_Of_Spades
 };
 
-std::vector<cardKeys> randomizedCardsAsKeys();
+std::vector<cardKeys> cardsAsKeys();
 
 #endif

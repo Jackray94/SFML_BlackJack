@@ -8,6 +8,9 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <algorithm>
+#include <random>
+#include <chrono>
 
 #include "imageFileHandle.h"
 #include "cardKeys.h"
@@ -28,10 +31,12 @@ class Game
     void updateSpritesFromTextureMapOfCards(std::vector<sf::Sprite> & cardsAsSprites, cardKeys const & cardKey, std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> & mapOfCardsTextures);
     void generateSprite(std::vector<sf::Sprite> & cardsAsSprites, std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv);
   void updatePositionOfCardSprites(std::vector<sf::Sprite> & cardsAsSprites, int & countButtonToDrawClicks);
+    void randomizeListOfCardKeys(std::vector<cardKeys> & listOfCardKeys);
 
   private:
     sf::RenderWindow mWindow;
-    std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> mapOfCardTextures;    std::vector<cardKeys> listOfRandomCardKeys;
+    std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> mapOfCardTextures;    
+    std::vector<cardKeys> listOfCardKeys;
     std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;
     sf::Font mFont;
