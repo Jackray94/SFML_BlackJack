@@ -4,7 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+
 #include <unordered_map>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
@@ -14,6 +16,8 @@
 
 #include "imageFileHandle.h"
 #include "cardKeys.h"
+#include "Deck.h"
+#include "Player.h"
 
 class Game
 {
@@ -30,12 +34,13 @@ class Game
     void loadCardTexturesToMap();
     void updateSpritesFromTextureMapOfCards(cardKeys const & cardKey);
     void generateSprite(std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv);
-  void updatePositionOfCardSprites(int & countButtonToDrawClicks);
+    void updatePositionOfCardSprites(int & countButtonToDrawClicks);
     void randomizeListOfCardKeys();
+
+    void updateGameLogic();
 
   private:
     sf::RenderWindow mWindow;
-    std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> mapOfCardTextures;    
     std::vector<cardKeys> listOfCardKeys;
     std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;
@@ -44,6 +49,11 @@ class Game
     float const slotScaleFactor;
     float const slotXDeltaFactor;
     float const slotYDeltaFactor;
+
+    Deck Deck;
+    //eventually will receive list of players from user and store each player object inside a vector
+    Player p1{"Jim"};
+    Player p2{"Bobby"};
 };
 
 #endif

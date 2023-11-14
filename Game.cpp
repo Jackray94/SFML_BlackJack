@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include <iostream>
 
 Game::Game()
   : mWindow(sf::VideoMode(800, 600), "sfml application"), 
@@ -153,6 +152,13 @@ void Game::randomizeListOfCardKeys()
 {
   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
   std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
+}
+
+void Game::updateGameLogic()
+{
+  p1.pushCardToHand(Deck.currentCardName());
+  p1.updateScore(Deck.currentCardValue());
+  Deck.increaseIndex();
 }
 
 
