@@ -25,8 +25,8 @@ void Game::Run()
   sf::Clock clock;
   sf::Time timeSinceLastUpdate = sf::Time::Zero;
   sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-  loadCardTexturesToMap(mapOfCardTextures, listOfCardKeys, listOfFileNames);
-  randomizeListOfCardKeys(listOfCardKeys);
+  loadCardTexturesToMap();
+  randomizeListOfCardKeys();
   loadFont();
   buttonToDrawCard();
 
@@ -38,7 +38,7 @@ void Game::Run()
       timeSinceLastUpdate -= TimePerFrame;
       processEvents(countButtonToDrawClicks);
     }
-    render(cardsAsSprites);
+    render();
   }
 }
 
@@ -60,11 +60,11 @@ void Game::processEvents(int & countButtonToDrawClicks)
   }
 }
 
-void Game::render(std::vector<sf::Sprite> const & cardsAsSptires)
+void Game::render()
 {
   mWindow.clear();
   mWindow.draw(mText);
-  for(auto const & card : cardsAsSptires){
+  for(auto const & card : cardsAsSprites){
     mWindow.draw(card);
   }
   mWindow.display();
@@ -88,11 +88,11 @@ void Game::buttonToDrawCard()
 
 void Game::handleButtonToDrawInput(int & countButtonToDrawClicks){
   mText.setFillColor(sf::Color::Blue);
-  updateSpritesFromTextureMapOfCards(cardsAsSprites, listOfCardKeys[countButtonToDrawClicks], mapOfCardTextures);
-  updatePositionOfCardSprites(cardsAsSprites, countButtonToDrawClicks);
+  updateSpritesFromTextureMapOfCards(listOfCardKeys[countButtonToDrawClicks]);
+  updatePositionOfCardSprites(countButtonToDrawClicks);
 }
 
-  void Game::updatePositionOfCardSprites(std::vector<sf::Sprite> & cardsAsSprites, int & countButtonToDrawClicks)
+  void Game::updatePositionOfCardSprites(int & countButtonToDrawClicks)
 {  /* |_|_|_|_|_|
   ** |_|_|_|_|_| A 5x2 layout of sprites on window is made here. 
   */
@@ -112,44 +112,44 @@ void Game::handleButtonToDrawInput(int & countButtonToDrawClicks){
 }
 
 
-void Game::updateSpritesFromTextureMapOfCards(std::vector<sf::Sprite> & cardsAsSprites, cardKeys const & cardKey, std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> & mapOfCardsTextures)
+void Game::updateSpritesFromTextureMapOfCards(cardKeys const & cardKey)
 {
-  auto found = mapOfCardsTextures.find(cardKey);
-  if(found == mapOfCardsTextures.end()){
+  auto found = mapOfCardTextures.find(cardKey);
+  if(found == mapOfCardTextures.end()){
     std::cerr << "Failed to access map key/value pair";
     exit(1);
   }
 
-  generateSprite(cardsAsSprites, *found); 
+  generateSprite(*found); 
 }
 
-void Game::generateSprite(std::vector<sf::Sprite> & cardsAsSprites, std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv)
+void Game::generateSprite(std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv)
 {
   cardsAsSprites.push_back(sf::Sprite(*kv.second));
 }
 
-void Game::loadCardTexturesToMap(std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> & mapOfCardsTextures, std::vector<cardKeys> const & listOfCardKeys, std::vector<std::string> const & listOfFileValues)
+void Game::loadCardTexturesToMap()
 {
   int count = 0;
   // loop through the 52 files. They're sorted alphabetically, and enums are made to match this sorted file vector for its vector of keys
   // For each file name, create Texture object pointer and load each file.
-  for(std::vector<std::string>::const_iterator i = listOfFileValues.begin(), e = listOfFileValues.end(); i != e; ++i){
+  for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
     auto ptr = std::make_unique<sf::Texture>();
-    if(!ptr->loadFromFile(listOfFileValues[count])){
-      std::cerr << "Failed to open " << listOfFileValues[count] << '\n';
+    if(!ptr->loadFromFile(listOfFileNames[count])){
+      std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
       exit(1);
     }
     //insert each pair into map. Check insertion happened okay by true/false of .second of returned std::pair
-    auto successfulPairFromInsertion = mapOfCardsTextures.insert(std::make_pair(listOfCardKeys[count], std::move(ptr))); 
+    auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(listOfCardKeys[count], std::move(ptr))); 
     if(!successfulPairFromInsertion.second){
-      std::cerr << "Failed to insert " << listOfFileValues[count] << '\n';
+      std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
       exit(1);
     }
     count++;
   }
 }
 
-void Game::randomizeListOfCardKeys(std::vector<cardKeys> & listOfCardKeys)
+void Game::randomizeListOfCardKeys()
 {
   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
   std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);

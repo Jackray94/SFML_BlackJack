@@ -23,15 +23,15 @@ class Game
 
   private:
     void processEvents(int & countButtonToDrawClicks);
-    void render(std::vector<sf::Sprite> const & cardsAsSptires);
+    void render();
     void loadFont();
     void buttonToDrawCard();
     void handleButtonToDrawInput(int & countButtonToDrawClicks);
-    void loadCardTexturesToMap(std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> & mapOfCardsTextures, std::vector<cardKeys> const & listOfCardKeys, std::vector<std::string> const & listOfFileValues);
-    void updateSpritesFromTextureMapOfCards(std::vector<sf::Sprite> & cardsAsSprites, cardKeys const & cardKey, std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> & mapOfCardsTextures);
-    void generateSprite(std::vector<sf::Sprite> & cardsAsSprites, std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv);
-  void updatePositionOfCardSprites(std::vector<sf::Sprite> & cardsAsSprites, int & countButtonToDrawClicks);
-    void randomizeListOfCardKeys(std::vector<cardKeys> & listOfCardKeys);
+    void loadCardTexturesToMap();
+    void updateSpritesFromTextureMapOfCards(cardKeys const & cardKey);
+    void generateSprite(std::pair<const cardKeys, std::unique_ptr<sf::Texture>> & kv);
+  void updatePositionOfCardSprites(int & countButtonToDrawClicks);
+    void randomizeListOfCardKeys();
 
   private:
     sf::RenderWindow mWindow;
