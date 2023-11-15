@@ -5,16 +5,16 @@ class Deck
 {
   public:
     Deck()
-      : deckOfCards{mapOfCards()}, listOfCardKeys{randomizedCardKeys()}, index{0}
+      : deckOfCards{mapOfCards()}, randomListOfCardKeys{randomizedCardKeys()}, index{0}
     {
     }
-    std::string currentCardName(){return listOfCardKeys[index];}
-    int currentCardValue(){return deckOfCards[listOfCardKeys[index]];}
+    std::string currentCardName(){return randomListOfCardKeys[index];}
+    int currentCardValue(){return deckOfCards[randomListOfCardKeys[index]];}
     void increaseIndex(){index++;}
     
   private:
     std::unordered_map<std::string, int> deckOfCards;
-    std::vector<std::string> listOfCardKeys;
+    std::vector<std::string> randomListOfCardKeys;
     int index;
 };
 

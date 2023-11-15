@@ -41,6 +41,7 @@ class Game
 
   private:
     sf::RenderWindow mWindow;
+    std::unordered_map<cardKeys, std::unique_ptr<sf::Texture>> mapOfCardTextures;
     std::vector<cardKeys> listOfCardKeys;
     std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;

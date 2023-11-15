@@ -30,6 +30,7 @@ class Player
         }
       }
     }
+
     friend std::ostream& operator<<(std::ostream & out, Player const & p)
     {
       out << p.Name << " has cards:\n";
