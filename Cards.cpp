@@ -1,32 +1,24 @@
 #include "Cards.h"
 
-std::vector<std::string> randomizedCardKeys()
+std::vector<std::string> cardKeys()
 {
   auto list = std::vector<std::string>  
   {
-    "Ace of Clubs", "Ace of Spades", "Ace of Diamonds", "Ace of Hearts", 
-    "King of Clubs", "King of Spades", "King of Diamonds", "King of Hearts", 
-    "Queen of Clubs", "Queen of Spades", "Queen of Diamonds", "Queen of Hearts", 
-    "Jack of Clubs", "Jack of Spades", "Jack of Diamonds", "Jack of Hearts", 
-    "Ten of Clubs", "Ten of Spades", "Ten of Diamonds", "Ten of Hearts", 
-    "Nine of Clubs", "Nine of Spades", "Nine of Diamonds", "Nine of Hearts", 
-    "Eight of Clubs", "Eight of Spades", "Eight of Diamonds", "Eight of Hearts", 
-    "Seven of Clubs", "Seven of Spades", "Seven of Diamonds", "Seven of Hearts", 
-    "Six of Clubs", "Six of Spades", "Six of Diamonds", "Six of Hearts", 
-    "Five of Clubs", "Five of Spades", "Five of Diamonds", "Five of Hearts", 
-    "Four of Clubs", "Four of Spades", "Four of Diamonds", "Four of Hearts", 
-    "Three of Clubs", "Three of Spades", "Three of Diamonds", "Three of Hearts", 
-    "Two of Clubs", "Two of Spades", "Two of Diamonds", "Two of Hearts" 
+    "Ten of Clubs",  "Ten of Diamonds", "Ten of Hearts", "Ten of Spades",
+    "Two of Clubs",  "Two of Diamonds", "Two of Hearts", "Two of Spades",
+    "Three of Clubs",  "Three of Diamonds", "Three of Hearts", "Three of Spades",
+    "Four of Clubs",  "Four of Diamonds", "Four of Hearts", "Four of Spades",
+    "Five of Clubs",  "Five of Diamonds", "Five of Hearts", "Five of Spades",
+    "Six of Clubs",  "Six of Diamonds", "Six of Hearts", "Six of Spades",
+    "Seven of Clubs",  "Seven of Diamonds", "Seven of Hearts", "Seven of Spades",
+    "Eight of Clubs",  "Eight of Diamonds", "Eight of Hearts", "Eight of Spades",
+    "Nine of Clubs",  "Nine of Diamonds", "Nine of Hearts", "Nine of Spades",
+    "Ace of Clubs",  "Ace of Diamonds", "Ace of Hearts", "Ace of Spades",
+    "Jack of Clubs",  "Jack of Diamonds", "Jack of Hearts", "Jack of Spades",
+    "King of Clubs",  "King of Diamonds", "King of Hearts", "King of Spades",
+    "Queen of Clubs",  "Queen of Diamonds", "Queen of Hearts", "Queen of Spades"
   };
-  random(list);
   return list;
-}
-
-
-void random(std::vector<std::string> & deck)
-{
-  static std::mt19937 mt = std::mt19937(static_cast<std::mt19937::result_type>(std::time(nullptr)));
-  std::shuffle(deck.begin(), deck.end(), mt);
 }
 
 std::unordered_map<std::string, int> mapOfCards()

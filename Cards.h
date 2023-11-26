@@ -8,9 +8,7 @@
 #include <algorithm>
 #include <chrono>
 
-std::vector<std::string> randomizedCardKeys();
-
-void random(std::vector<std::string> & deck);
+std::vector<std::string> cardKeys();
 
 std::unordered_map<std::string, int> mapOfCards();
 

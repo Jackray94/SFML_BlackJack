@@ -9,10 +9,11 @@
 class Player
 {
   public:
-    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, hasBust{false}, maxScore{21}{}
+    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, hasBust{false}, maxScore{21}, myTurn{false}{}
 
     int getScore(){return Score;}
     void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
+    int numberOfCardsInHand(){return static_cast<int>(Hand.size());}
     void updateScore(int val)
     {
       //keep track of newly drawn Aces. Once score exceeds 21 if player has Aces then their Aces can equal 1 instead of 11(score minus 10)
@@ -45,6 +46,9 @@ class Player
       return out;
     }
 
+    bool isTurn(){return myTurn;}
+    void setTurn(bool x){myTurn = x;}
+
   private:
     int Score;
     std::string Name;
@@ -52,6 +56,7 @@ class Player
     int aceCount;
     bool hasBust;
     int const maxScore;
+    bool myTurn;
     
 };
 
