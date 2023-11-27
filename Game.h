@@ -112,6 +112,11 @@ class Game
     Player p1{"Jim"};
     Player p2{"Bobby"};
     Player p3{"Anthony"};
+    
+    std::vector<int> dealerSprites;
+    std::vector<int> player1Sprites;
+    std::vector<int> player2Sprites;
+    std::vector<int> player3Sprites;
 };
 
 #endif
