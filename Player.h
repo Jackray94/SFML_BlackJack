@@ -32,6 +32,23 @@ class Player
       }
     }
 
+    std::string toSFTextSetString()
+    {
+      // std::string_view update{Name + "has Cards:\n"};
+      std::string update{Name + "has Cards:\n"};
+      //The '/' shouldn't follow the last element
+      for(std::size_t i = 0; i < Hand.size() - 1; ++i){
+        update +=  Hand[i] + "/ ";
+      }
+      update += Hand[Hand.size()-1] + '\n';
+      update += "Score is ";
+      update += Score + '\n';
+      if(hasBust == true){
+        update += Name += " has Bust\n";
+      }
+      return update;
+    }
+
     friend std::ostream& operator<<(std::ostream & out, Player const & p)
     {
       out << p.Name << " has cards:\n";

@@ -17,9 +17,9 @@ Game::Game()
     buttonToHitPosition{centerPosition.left + 600, centerPosition.right + 400},
     buttonToStayPosition{centerPosition.left - 600, centerPosition.right + 400},
     dealerNamePlatePosition{centerPosition.left, centerPosition.right - 200},
-    player1NamePlatePosition{centerPosition.left - 600, centerPosition.right + 200},
-    player2NamePlatePosition{centerPosition.left + 600, centerPosition.right + 200},
-    player3NamePlatePosition{centerPosition.left, centerPosition.right + 200},
+    player1NamePlatePosition{centerPosition.left - 600, centerPosition.right + 300},
+    player2NamePlatePosition{centerPosition.left + 600, centerPosition.right + 300},
+    player3NamePlatePosition{centerPosition.left, centerPosition.right + 300},
     dealerCardPlacement{dealerNamePlatePosition.left, dealerNamePlatePosition.right - 150},
     player1CardPlacement{player1NamePlatePosition.left, player1NamePlatePosition.right - 150},
     player2CardPlacement{player2NamePlatePosition.left, player2NamePlatePosition.right - 150},
@@ -167,17 +167,11 @@ void Game::updateDialogueBox()
     switch(currentState)
     {
       case State::init:
-        // mDialogueBox.setString("Starting BlackJack\n");
-        // mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-        // // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-        // mDialogueBox.setPosition(x_coordZero, y_coordZero + 200);
         dialogueClock.restart();
-        // currentState = Game::State::dealerFirstCardReveal; <-- this won't update here. Mkae it update after the cards phyics happens to land a card on the dealer "bucket"
         break;
       case State::dealerFirstCardReveal:
         mDialogueBox.setString("Dealer draws their first card\n");
         mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-        // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
         mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         dialogueClock.restart();
         break;
@@ -185,6 +179,7 @@ void Game::updateDialogueBox()
         break;
       case State::promptPlayerMoves:
         if(p1.isTurn()){
+          // mDialogueBox.setString(p1.toSFTextSetString());
           mDialogueBox.setString("P1 do you hit or stay?\n");
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
@@ -335,104 +330,70 @@ void Game::updatePositionOfCardSprites()
       cardsAsSprites[dealerSprites[0]].setPosition(dealerCardPlacement.left, dealerCardPlacement.right);
       break;
     case State::dealFirstCardsToPlayers:
-      if(p1.isTurn()){
+      if(p1.isTurn()){ // <-- left off here cleaning this portion up. After that, then do the same for p2 and p3, doing both states that make up player cards
         player1Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
-        player1CardPlacement.left -= (p1.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
+        player1CardPlacement.left -= (player1Sprites.size() - 1) * slotXDeltaFactor / 2;
         for(int i = 0; i < player1Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
-          if(player1Sprites.size() < 4){
-            cardsAsSprites[player1Sprites[i]].setPosition(player1CardPlacement.left + i*slotXDeltaFactor, player1CardPlacement.right);
-          }
-          else{
-            cardsAsSprites[player1Sprites[i]].setPosition(cardsAsSprites[player1Sprites[i%4]].getPosition().x, cardsAsSprites[player1Sprites[i%4]].getPosition().y - slotYDeltaFactor);
-          }
+          cardsAsSprites[player1Sprites[i]].setPosition(player1CardPlacement.left + i*slotXDeltaFactor, player1CardPlacement.right);
         }
       }
       if(p2.isTurn()){
         player2Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
         player2CardPlacement.left -= (p2.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
         for(int i = 0; i < player2Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
-          if(player2Sprites.size() < 4){
-            cardsAsSprites[player2Sprites[i]].setPosition(player2CardPlacement.left + i*slotXDeltaFactor, player2CardPlacement.right);
-          }
-          else{
-            cardsAsSprites[player2Sprites[i]].setPosition(cardsAsSprites[player2Sprites[i%4]].getPosition().x, cardsAsSprites[player2Sprites[i%4]].getPosition().y - slotYDeltaFactor);
-          }
+          cardsAsSprites[player2Sprites[i]].setPosition(player2CardPlacement.left + i*slotXDeltaFactor, player2CardPlacement.right);
         }
       }
       if(p3.isTurn()){
         player3Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
         player3CardPlacement.left -= (p3.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
         for(int i = 0; i < player3Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
-          if(player3Sprites.size() < 4){
-            cardsAsSprites[player3Sprites[i]].setPosition(player3CardPlacement.left + i*slotXDeltaFactor, player3CardPlacement.right);
-          }
-          else{
-            cardsAsSprites[player3Sprites[i]].setPosition(cardsAsSprites[player3Sprites[i%4]].getPosition().x, cardsAsSprites[player3Sprites[i%4]].getPosition().y - slotYDeltaFactor);
-          }
+          cardsAsSprites[player3Sprites[i]].setPosition(player3CardPlacement.left + i*slotXDeltaFactor, player3CardPlacement.right);
         }
       }
       break;
     case State::promptPlayerMoves:
       if(p1.isTurn() && hitPressed){
         player1Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
         if(player1Sprites.size() <= maxCardsPerRow){
           player1CardPlacement.left -= slotXDeltaFactor / 2;
         }
         for(int i = 0; i < player1Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
           if(i < maxCardsPerRow){
             cardsAsSprites[player1Sprites[i]].setPosition(player1CardPlacement.left + i*slotXDeltaFactor, player1CardPlacement.right);
           }
           else{
-            cardsAsSprites[player1Sprites[i]].setPosition(cardsAsSprites[player1Sprites[i%3]].getPosition().x, cardsAsSprites[player1Sprites[i%3]].getPosition().y - slotYDeltaFactor);
+            cardsAsSprites[player1Sprites[i]].setPosition(cardsAsSprites[player1Sprites[i%maxCardsPerRow]].getPosition().x, cardsAsSprites[player1Sprites[i%maxCardsPerRow]].getPosition().y - slotYDeltaFactor);
           }
         }
-        // cardsAsSprites[spritesIDX].setPosition(player1CardPlacement.left + p1.numberOfCardsInHand()*slotXDeltaFactor, player1CardPlacement.right);
       }
       if(p2.isTurn() && hitPressed){
         player2Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
-        // player2CardPlacement.left -= (p2.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
-        player2CardPlacement.left = player2CardPlacement.left - (p2.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
+        if(player2Sprites.size() <= maxCardsPerRow){
+          player2CardPlacement.left -= slotXDeltaFactor / 2;
+        }
         for(int i = 0; i < player2Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
-          if(player2Sprites.size() < 4){
+          if(i < maxCardsPerRow){
             cardsAsSprites[player2Sprites[i]].setPosition(player2CardPlacement.left + i*slotXDeltaFactor, player2CardPlacement.right);
           }
           else{
-            cardsAsSprites[player2Sprites[i]].setPosition(cardsAsSprites[player2Sprites[i%4]].getPosition().x, cardsAsSprites[player2Sprites[i%4]].getPosition().y - slotYDeltaFactor);
+            cardsAsSprites[player2Sprites[i]].setPosition(cardsAsSprites[player2Sprites[i%maxCardsPerRow]].getPosition().x, cardsAsSprites[player2Sprites[i%maxCardsPerRow]].getPosition().y - slotYDeltaFactor);
           }
         }
-        // cardsAsSprites[spritesIDX].setPosition(player2CardPlacement.left + p2.numberOfCardsInHand()*slotXDeltaFactor, player2CardPlacement.right);
       }
       if(p3.isTurn() && hitPressed){
         player3Sprites.push_back(spritesIDX);
-        //p1.numberOfCardsInHand() is equivalent to player1Sprites.size()
-        // player3CardPlacement.left -= (p3.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
-        player3CardPlacement.left = player3CardPlacement.left - (p3.numberOfCardsInHand() - 1) * (slotXDeltaFactor / 2);
+        if(player3Sprites.size() <= maxCardsPerRow){
+          player3CardPlacement.left -= slotXDeltaFactor / 2;
+        }
         for(int i = 0; i < player3Sprites.size(); i++){
-          //Will dynamically resize but the max number of cards per player will hold this pattern: |5|6|7|8|
-          //                                                                            |1|2|3|4|
-          if(player3Sprites.size() < 4){
+          if(i < maxCardsPerRow){
             cardsAsSprites[player3Sprites[i]].setPosition(player3CardPlacement.left + i*slotXDeltaFactor, player3CardPlacement.right);
           }
           else{
-            cardsAsSprites[player3Sprites[i]].setPosition(cardsAsSprites[player3Sprites[i%4]].getPosition().x, cardsAsSprites[player3Sprites[i%4]].getPosition().y - slotYDeltaFactor);
+            cardsAsSprites[player3Sprites[i]].setPosition(cardsAsSprites[player3Sprites[i%maxCardsPerRow]].getPosition().x, cardsAsSprites[player3Sprites[i%maxCardsPerRow]].getPosition().y - slotYDeltaFactor);
           }
         }
-        // cardsAsSprites[spritesIDX].setPosition(player3CardPlacement.left + p3.numberOfCardsInHand()*slotXDeltaFactor, player3CardPlacement.right);
       }
       break;
   }
@@ -541,6 +502,7 @@ void Game::updateGameLogic()
         updatePositionOfCardSprites();
         p2.setTurn(false);
         Deck.increaseIndex();
+
         p2.setTurn(true);
         p2.pushCardToHand(Deck.currentCardName());
         p2.updateScore(Deck.currentCardValue());
