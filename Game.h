@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <string_view>
 #include <memory>
 #include <algorithm>
 #include <random>
@@ -98,7 +100,7 @@ class Game
     sf::Text ButtonToStay;
     bool hitPressed;
     bool stayPressed;
-    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, promptPlayerMoves};
+    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves};
     State currentState;
     sf::Clock clock;
     sf::Time timeSinceLastUpdate;
@@ -117,6 +119,8 @@ class Game
     std::vector<int> player1Sprites;
     std::vector<int> player2Sprites;
     std::vector<int> player3Sprites;
+    
+    int const winningScore;
 };
 
 #endif

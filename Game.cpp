@@ -13,13 +13,13 @@ Game::Game()
     // centerLeft{screenWidth / 2.f},
     // centerRight{(screenHeight / 2.f) - taskBarOffset},
     centerPosition{screenWidth / 2.f, (screenHeight / 2.f) - taskBarOffset},
-    dialogueBoxPosition{centerPosition.left, centerPosition.right + 400},
+    dialogueBoxPosition{centerPosition.left, centerPosition.right + 350},
     buttonToHitPosition{centerPosition.left + 600, centerPosition.right + 400},
     buttonToStayPosition{centerPosition.left - 600, centerPosition.right + 400},
-    dealerNamePlatePosition{centerPosition.left, centerPosition.right - 200},
-    player1NamePlatePosition{centerPosition.left - 600, centerPosition.right + 300},
-    player2NamePlatePosition{centerPosition.left + 600, centerPosition.right + 300},
-    player3NamePlatePosition{centerPosition.left, centerPosition.right + 300},
+    dealerNamePlatePosition{centerPosition.left, centerPosition.right - 225},
+    player1NamePlatePosition{centerPosition.left - 600, centerPosition.right + 250},
+    player2NamePlatePosition{centerPosition.left + 600, centerPosition.right + 250},
+    player3NamePlatePosition{centerPosition.left, centerPosition.right + 250},
     dealerCardPlacement{dealerNamePlatePosition.left, dealerNamePlatePosition.right - 150},
     player1CardPlacement{player1NamePlatePosition.left, player1NamePlatePosition.right - 150},
     player2CardPlacement{player2NamePlatePosition.left, player2NamePlatePosition.right - 150},
@@ -51,7 +51,8 @@ Game::Game()
     dealerSprites{std::vector<int>()},
     player1Sprites{std::vector<int>()},
     player2Sprites{std::vector<int>()},
-    player3Sprites{std::vector<int>()}
+    player3Sprites{std::vector<int>()},
+    winningScore{21}
 {
 }
 
@@ -160,10 +161,12 @@ void Game::loadFont()
   }
 }
 
+// void Game::updateDialogueBox(std::string_view message)
 void Game::updateDialogueBox()
 {
   diaglogueRate = dialogueClock.getElapsedTime();
   if(diaglogueRate >= dialogueDelay){
+    std::ostringstream message;
     switch(currentState)
     {
       case State::init:
@@ -177,20 +180,33 @@ void Game::updateDialogueBox()
         break;
       case State::dealFirstCardsToPlayers:
         break;
+      case State::evaluateEarlyBlackJack:
+        if(p1.isTurn()){
+          message << p1.getName() << " has 21 and has won.\n";
+          mDialogueBox.setString(message.str());
+          mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+          mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+        }
+        break;
       case State::promptPlayerMoves:
         if(p1.isTurn()){
-          // mDialogueBox.setString(p1.toSFTextSetString());
-          mDialogueBox.setString("P1 do you hit or stay?\n");
+          // mDialogueBox.setString("P1 do you hit or stay?\n");
+          message << p1.getName() << " you have score of " << p1.getScore() << ".\n\nDo you want to Hit or Stay?";
+          mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         }
         if(p2.isTurn()){
-          mDialogueBox.setString("P2 do you hit or stay?\n");
+          message << p2.getName() << " you have score of " << p2.getScore() << ".\n\nDo you want to Hit or Stay?";
+          // mDialogueBox.setString("P2 do you hit or stay?\n");
+          mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         }
         if(p3.isTurn()){
-          mDialogueBox.setString("P3 do you hit or stay?\n");
+          message << p3.getName() << " you have score of " << p3.getScore() << ".\n\nDo you want to Hit or Stay?";
+          // mDialogueBox.setString("P3 do you hit or stay?\n");
+          mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         }
@@ -204,7 +220,8 @@ void Game::initPlayer3NamePlate()
 {
   player3NamePlate.setFont(mFont);
   player3NamePlate.setCharacterSize(36);
-  player3NamePlate.setString("Player 3\n");
+  // player3NamePlate.setString("Player 3\n");
+  player3NamePlate.setString(p3.getName());
   player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   // player3NamePlate.setPosition(x_coordZero, y_coordZero+200);
@@ -216,7 +233,8 @@ void Game::initPlayer2NamePlate()
 {
   player2NamePlate.setFont(mFont);
   player2NamePlate.setCharacterSize(36);
-  player2NamePlate.setString("Player 2\n");
+  // player2NamePlate.setString("Player 2\n");
+  player2NamePlate.setString(p2.getName());
   player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   // player2NamePlate.setPosition(x_coordZero+600, y_coordZero+200);
@@ -228,7 +246,8 @@ void Game::initPlayer1NamePlate()
 {
   player1NamePlate.setFont(mFont);
   player1NamePlate.setCharacterSize(36);
-  player1NamePlate.setString("Player 1\n");
+  // player1NamePlate.setString("Player 1\n");
+  player1NamePlate.setString(p1.getName());
   player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   // player1NamePlate.setPosition(x_coordZero-600, y_coordZero+200);
@@ -240,7 +259,8 @@ void Game::initDealerNamePlate()
 {
   dealerNamePlate.setFont(mFont);
   dealerNamePlate.setCharacterSize(36);
-  dealerNamePlate.setString("Dealer\n");
+  // dealerNamePlate.setString("Dealer\n");
+  dealerNamePlate.setString(dealer.getName());
   dealerNamePlate.setOrigin(dealerNamePlate.getLocalBounds().left + dealerNamePlate.getLocalBounds().width/2, dealerNamePlate.getLocalBounds().top + dealerNamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   // dealerNamePlate.setPosition(x_coordZero, y_coordZero-200);
@@ -526,12 +546,29 @@ void Game::updateGameLogic()
         p3.setTurn(false);
         Deck.increaseIndex();
 
-        currentState = State::promptPlayerMoves;
+        currentState = State::evaluateEarlyBlackJack;
         //Kicks off selection of actions in promptPlayerMoves state
         p1.setTurn(true);
         break;
+      case State::evaluateEarlyBlackJack:
+        if(p1.isTurn()){
+          if(p1.hasBlackJack()){
+            updateDialogueBox();
+          }
+        }
+        if(p2.isTurn()){
+          if(p2.hasBlackJack()){
+            updateDialogueBox();
+          }
+        }
+        if(p3.isTurn()){
+          if(p3.hasBlackJack()){
+            updateDialogueBox();
+          }
+        }
+        currentState = State::promptPlayerMoves;
       case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
-          if(p1.isTurn()){
+          if(p1.isTurn() && !p1.hasBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p1.pushCardToHand(Deck.currentCardName());
@@ -541,13 +578,18 @@ void Game::updateGameLogic()
               Deck.increaseIndex();
               hitPressed = false;
             }
-            if (stayPressed){
+            if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+              p1.setTurn(false);
+              p2.setTurn(true);
+              stayPressed = false;
+            }
+            else if(stayPressed){
               p1.setTurn(false);
               p2.setTurn(true);
               stayPressed = false;
             }
           }
-          else if(p2.isTurn()){
+          else if(p2.isTurn() && !p2.hasBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p2.pushCardToHand(Deck.currentCardName());
@@ -563,7 +605,7 @@ void Game::updateGameLogic()
               stayPressed = false;
             }
           }
-          else if(p3.isTurn()){
+          else if(p3.isTurn() && !p3.hasBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p3.pushCardToHand(Deck.currentCardName());
