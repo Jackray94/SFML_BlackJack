@@ -582,6 +582,7 @@ void Game::updateGameLogic()
               p1.setTurn(false);
               p2.setTurn(true);
               stayPressed = false;
+              currentState = State::updateLossOfPlayer;
             }
             else if(stayPressed){
               p1.setTurn(false);
