@@ -9,7 +9,7 @@
 class Player
 {
   public:
-    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, hasBust{false}, maxScore{21}, myTurn{false}{}
+    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}{}
 
     int getScore(){return Score;}
     void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
@@ -23,7 +23,7 @@ class Player
       Score += val;
       if(Score > maxScore){
         if(aceCount == 0){
-          hasBust = true;
+          Bust = true;
         }
         else{
           Score -= 10;
@@ -43,7 +43,7 @@ class Player
       update += Hand[Hand.size()-1] + '\n';
       update += "Score is ";
       update += Score + '\n';
-      if(hasBust == true){
+      if(Bust == true){
         update += Name += " has Bust\n";
       }
       return update;
@@ -57,14 +57,14 @@ class Player
       }
       out << p.Hand[p.Hand.size()-1] << '\n';
       out << "Score is " << p.Score << '\n';
-      if(p.hasBust == true){
+      if(p.hasBust() == true){
         out << p.Name << " has Bust\n";
       }
       return out;
     }
 
     bool hasBlackJack(){return Score == maxScore;}
-    bool hasBust(){return Score > 21;}
+    bool hasBust()const {return Score > 21;}
     bool isTurn(){return myTurn;}
     void setTurn(bool x){myTurn = x;}
     std::string getName(){return Name;}
@@ -74,10 +74,9 @@ class Player
     std::string Name;
     std::vector<std::string> Hand;
     int aceCount;
-    bool hasBust;
+    bool Bust;
     int const maxScore;
     bool myTurn;
-    
 };
 
 #endif

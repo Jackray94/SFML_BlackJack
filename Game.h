@@ -48,6 +48,7 @@ class Game
     void drawCard(Player & p);
     void initDealerNamePlate();
     void initPlayer1NamePlate();
+    void updatePlayerBustToNamePlate();
     void initPlayer2NamePlate();
     void initPlayer3NamePlate();
 
@@ -100,7 +101,7 @@ class Game
     sf::Text ButtonToStay;
     bool hitPressed;
     bool stayPressed;
-    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves, updateLossOfPlayer};
+    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves };
     State currentState;
     sf::Clock clock;
     sf::Time timeSinceLastUpdate;
@@ -110,10 +111,10 @@ class Game
     sf::Time diaglogueRate;
     Deck Deck;
     //eventually will receive list of players from user and store each player object inside a vector
-    Player dealer{"Dealer"};
-    Player p1{"Jim"};
-    Player p2{"Bobby"};
-    Player p3{"Anthony"};
+    Player dealer{"Laylah"};
+    Player p1{"Toby"};
+    Player p2{"Lofi"};
+    Player p3{"Cricket"};
     
     std::vector<int> dealerSprites;
     std::vector<int> player1Sprites;

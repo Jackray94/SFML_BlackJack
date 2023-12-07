@@ -60,31 +60,17 @@ void Game::Run()
 {
   loadCardTexturesToMap();
   Deck.randomizeListOfCardKeys();
-  loadFont(); //<--  take all of  these inits and put htem into a function called init(). It will init these guys and also loop through the player names (or any other dialogue/text/sprite that depends on the number of players)
-  initDialogueBox(); //later on change name to updateDialogueBox instead and ripple thourhg consistencies
+  loadFont();
+  initDialogueBox();
   initButtonToHit();
   initButtonToStay();
   initDealerNamePlate();
   initPlayer1NamePlate();
   initPlayer2NamePlate();
   initPlayer3NamePlate();
-  // initDealerName();
-  // initPlayerName(); //<-- for now just assume there is 2 players and a dealer
+
   int countButtonToDrawClicks = 0;
   while(mWindow.isOpen()){
-    // switch(currentState)
-    // {
-    //   case State::handoutFirstCards:
-    //     break;
-    //   case State::promptPlayerMoves:
-    //     break;
-    // }
-    //      prompt.......dealer draws 1 card
-    //      prompt ......player 1 draws 2 cards.....
-    //      prompt ......player 2 draws 2 cards.....
-    //      prompt ......player 1 what do you want to hit or stay?      <------thorugh this point everytthing is inside dialogue box that is bottom of screen
-    //      hit             stay          <------ this is 2 buttons 
-    // updateGameLogic(dialogueClock, dialogueDelay, diaglogueRate, countButtonToDrawClicks);
     updateGameLogic();
     processEvents(countButtonToDrawClicks);
     timeSinceLastUpdate += clock.restart();
@@ -103,12 +89,8 @@ void Game::processEvents(int & countButtonToDrawClicks)
     if(event.type == sf::Event::Closed){
       mWindow.close();
     }
-    // sf::FloatRect rectangleHitCollision(ButtonToHit.getPosition().x, ButtonToHit.getPosition().y, ButtonToHit.getGlobalBounds().width, ButtonToHit.getGlobalBounds().height);
-    // sf::FloatRect rectangleStayCollision(ButtonToStay.getPosition().x, ButtonToStay.getPosition().y, ButtonToStay.getGlobalBounds().width, ButtonToStay.getGlobalBounds().height);
     sf::IntRect rectangleHitCollision(ButtonToHit.getPosition().x, ButtonToHit.getPosition().y, ButtonToHit.getGlobalBounds().width, ButtonToHit.getGlobalBounds().height);
     sf::IntRect rectangleStayCollision(ButtonToStay.getPosition().x, ButtonToStay.getPosition().y, ButtonToStay.getGlobalBounds().width, ButtonToStay.getGlobalBounds().height);
-    // sf::IntRect rectangleHitCollision(ButtonToHit.getLocalBounds().left, ButtonToHit.getLocalBounds().top, ButtonToHit.getLocalBounds().width, ButtonToHit.getLocalBounds().height);
-    // sf::IntRect rectangleStayCollision(ButtonToStay.getLocalBounds().left, ButtonToStay.getLocalBounds().top, ButtonToStay.getLocalBounds().width, ButtonToStay.getLocalBounds().height);
     if(currentState == State::promptPlayerMoves){
       if(rectangleHitCollision.contains(sf::Mouse::getPosition(mWindow)) && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         ButtonToHit.setFillColor(sf::Color::Blue);
@@ -160,6 +142,32 @@ void Game::loadFont()
     std::cout << "Error loading font" << '\n';
   }
 }
+
+void Game::updatePlayerBustToNamePlate()
+{
+  std::ostringstream message;
+  if(p1.isTurn()){
+    message << p1.getName() << "\nBUST\n";
+    mDialogueBox.setString(message.str());
+    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+  }
+  if(p2.isTurn()){
+    message << p2.getName() << "\nBUST\n";
+    mDialogueBox.setString(message.str());
+    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+  }
+  if(p3.isTurn()){
+    message << p3.getName() << "\nBUST\n";
+    mDialogueBox.setString(message.str());
+    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+  }
+
+
+}
+
 
 // void Game::updateDialogueBox(std::string_view message)
 void Game::updateDialogueBox()
@@ -372,6 +380,8 @@ void Game::updatePositionOfCardSprites()
         }
       }
       break;
+    case State::evaluateEarlyBlackJack:
+      break;
     case State::promptPlayerMoves:
       if(p1.isTurn() && hitPressed){
         player1Sprites.push_back(spritesIDX);
@@ -568,7 +578,7 @@ void Game::updateGameLogic()
         }
         currentState = State::promptPlayerMoves;
       case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
-          if(p1.isTurn() && !p1.hasBlackJack()){
+          if(p1.isTurn() && !p1.hasBlackJack() && !p1.hasBust()){
             updateDialogueBox();
             if(hitPressed){
               p1.pushCardToHand(Deck.currentCardName());
@@ -578,19 +588,18 @@ void Game::updateGameLogic()
               Deck.increaseIndex();
               hitPressed = false;
             }
-            if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+            if(stayPressed){
               p1.setTurn(false);
               p2.setTurn(true);
               stayPressed = false;
-              currentState = State::updateLossOfPlayer;
             }
-            else if(stayPressed){
+            if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+              updatePlayerBustToNamePlate();
               p1.setTurn(false);
               p2.setTurn(true);
-              stayPressed = false;
             }
           }
-          else if(p2.isTurn() && !p2.hasBlackJack()){
+          else if(p2.isTurn() && !p2.hasBlackJack() && !p2.hasBust()){
             updateDialogueBox();
             if(hitPressed){
               p2.pushCardToHand(Deck.currentCardName());
@@ -605,8 +614,13 @@ void Game::updateGameLogic()
               p3.setTurn(true);
               stayPressed = false;
             }
+            if(p2.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+              updatePlayerBustToNamePlate();
+              p2.setTurn(false);
+              p3.setTurn(true);
+            }
           }
-          else if(p3.isTurn() && !p3.hasBlackJack()){
+          else if(p3.isTurn() && !p3.hasBlackJack() && !p3.hasBust()){
             updateDialogueBox();
             if(hitPressed){
               p3.pushCardToHand(Deck.currentCardName());
@@ -620,20 +634,12 @@ void Game::updateGameLogic()
               p3.setTurn(false);
               stayPressed = false;
             }
+            if(p3.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+              updatePlayerBustToNamePlate();
+              p2.setTurn(false);
+              p3.setTurn(false);
+            }
           }
-        // p1.setTurn(true);
-        // updateDialogueBox();
-        // if(hitPressed){
-        //   p1.pushCardToHand(Deck.currentCardName());
-        //   p1.updateScore(Deck.currentCardValue());
-        //   updateSpritesFromTextureMapOfCards();
-        //   updatePositionOfCardSprites();
-        //   Deck.increaseIndex();
-        // }
-
         break;
     }
-  // p1.pushCardToHand(Deck.currentCardName());
-  // p1.updateScore(Deck.currentCardValue());
-  // Deck.increaseIndex();
 }
