@@ -101,7 +101,7 @@ class Game
     sf::Text ButtonToStay;
     bool hitPressed;
     bool stayPressed;
-    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves };
+   enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves, dealerFinalTurn};
     State currentState;
     sf::Clock clock;
     sf::Time timeSinceLastUpdate;

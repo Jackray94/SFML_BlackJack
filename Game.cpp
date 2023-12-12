@@ -148,24 +148,22 @@ void Game::updatePlayerBustToNamePlate()
   std::ostringstream message;
   if(p1.isTurn()){
     message << p1.getName() << "\nBUST\n";
-    mDialogueBox.setString(message.str());
-    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+    player1NamePlate.setString(message.str());
+    player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
+    player1NamePlate.setPosition(player1NamePlatePosition.left, player1NamePlatePosition.right);
   }
   if(p2.isTurn()){
     message << p2.getName() << "\nBUST\n";
-    mDialogueBox.setString(message.str());
-    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+    player2NamePlate.setString(message.str());
+    player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
+    player2NamePlate.setPosition(player2NamePlatePosition.left, player2NamePlatePosition.right);
   }
   if(p3.isTurn()){
     message << p3.getName() << "\nBUST\n";
-    mDialogueBox.setString(message.str());
-    mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-    mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+    player3NamePlate.setString(message.str());
+    player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
+    player3NamePlate.setPosition(player3NamePlatePosition.left, player3NamePlatePosition.right);
   }
-
-
 }
 
 
@@ -218,6 +216,13 @@ void Game::updateDialogueBox()
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         }
+        break;
+      case State::dealerFinalTurn:
+          message << dealer.getName() << " draws remaining cards\n";
+          // mDialogueBox.setString("P3 do you hit or stay?\n");
+          mDialogueBox.setString(message.str());
+          mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+          mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         break;
     }
   }
@@ -425,7 +430,14 @@ void Game::updatePositionOfCardSprites()
           }
         }
       }
-      break;
+        break;
+      case State::dealerFinalTurn:
+        dealerSprites.push_back(spritesIDX);
+        dealerCardPlacement.left -= slotXDeltaFactor / 2;
+        for(int i = 0; i < dealerSprites.size(); i++){
+          cardsAsSprites[dealerSprites[i]].setPosition(dealerCardPlacement.left + i*slotXDeltaFactor, dealerCardPlacement.right);
+        }
+        break;
   }
 
   // if(countButtonToDrawClicks >= 10){
@@ -562,23 +574,23 @@ void Game::updateGameLogic()
         break;
       case State::evaluateEarlyBlackJack:
         if(p1.isTurn()){
-          if(p1.hasBlackJack()){
+          if(p1.hasEarlyBlackJack()){
             updateDialogueBox();
           }
         }
         if(p2.isTurn()){
-          if(p2.hasBlackJack()){
+          if(p2.hasEarlyBlackJack()){
             updateDialogueBox();
           }
         }
         if(p3.isTurn()){
-          if(p3.hasBlackJack()){
+          if(p3.hasEarlyBlackJack()){
             updateDialogueBox();
           }
         }
         currentState = State::promptPlayerMoves;
       case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
-          if(p1.isTurn() && !p1.hasBlackJack() && !p1.hasBust()){
+          if(p1.isTurn() && !p1.hasEarlyBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p1.pushCardToHand(Deck.currentCardName());
@@ -599,7 +611,7 @@ void Game::updateGameLogic()
               p2.setTurn(true);
             }
           }
-          else if(p2.isTurn() && !p2.hasBlackJack() && !p2.hasBust()){
+          else if(p2.isTurn() && !p2.hasEarlyBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p2.pushCardToHand(Deck.currentCardName());
@@ -620,7 +632,7 @@ void Game::updateGameLogic()
               p3.setTurn(true);
             }
           }
-          else if(p3.isTurn() && !p3.hasBlackJack() && !p3.hasBust()){
+          else if(p3.isTurn() && !p3.hasEarlyBlackJack()){
             updateDialogueBox();
             if(hitPressed){
               p3.pushCardToHand(Deck.currentCardName());
@@ -631,15 +643,29 @@ void Game::updateGameLogic()
               hitPressed = false;
             }
             if (stayPressed){
-              p3.setTurn(false);
               stayPressed = false;
+              p3.setTurn(false);
+              dealer.setTurn(true);
             }
             if(p3.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
               updatePlayerBustToNamePlate();
-              p2.setTurn(false);
               p3.setTurn(false);
+              dealer.setTurn(true);
             }
           }
+          if(dealer.isTurn()){
+            currentState = State::dealerFinalTurn;
+          }
+        break;
+      case State::dealerFinalTurn:
+        updateDialogueBox();
+        if(/*dealer score less than 17*/dealer.requiredToHit()){
+          dealer.pushCardToHand(Deck.currentCardName());
+          dealer.updateScore(Deck.currentCardValue());
+          updateSpritesFromTextureMapOfCards();
+          updatePositionOfCardSprites();
+          Deck.increaseIndex();
+        }
         break;
     }
 }

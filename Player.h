@@ -63,9 +63,10 @@ class Player
       return out;
     }
 
-    bool hasBlackJack(){return Score == maxScore;}
+    bool hasEarlyBlackJack(){return Score == maxScore;}
     bool hasBust()const {return Score > 21;}
     bool isTurn(){return myTurn;}
+    bool requiredToHit(){return Score < 17;}
     void setTurn(bool x){myTurn = x;}
     std::string getName(){return Name;}
 
