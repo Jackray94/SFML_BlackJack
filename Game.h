@@ -28,16 +28,14 @@ class Game
     void Run();
 
   private:
-    void processEvents(int & countButtonToDrawClicks);
+    void processEvents();
     void render();
     void loadFont();
-    void handleButtonToDrawInput(int & countButtonToDrawClicks);
+    void handleButtonToDrawInput();
     void loadCardTexturesToMap();
     void updateSpritesFromTextureMapOfCards();
     void generateSprite(std::pair<const std::string, std::unique_ptr<sf::Texture>> & kv);
     void updatePositionOfCardSprites();
-
-    // void updateGameLogic(sf::Clock & dialogueClock, sf::Time & dialogueDelay, sf::Time & diaglogueRate, int & countButtonToDrawClicks);
     void updateGameLogic();
     void initButtonToHit();
     void initButtonToStay();
@@ -51,13 +49,15 @@ class Game
     void updatePlayerBustToNamePlate();
     void initPlayer2NamePlate();
     void initPlayer3NamePlate();
+    void initTextBoxes();
+    void setupDeck();
+    void drawCardsAndUpdateDeck(Player & p);
 
     struct Coordinate
     {
       float left;
       float right;
     };
-
 
   private:
     unsigned int const taskBarOffset;
@@ -75,23 +75,15 @@ class Game
     Coordinate player1CardPlacement;
     Coordinate player2CardPlacement;
     Coordinate player3CardPlacement;
-    // float const centerLeft;
-    // float const centerRight;
     sf::RenderWindow mWindow;
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> mapOfCardTextures;
     std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;
     sf::Font mFont;
     sf::Text mText;
-    //////////////////////////
     float const slotScaleFactor;
-    // float const cardScale;
     float const slotXDeltaFactor;
-    // float const cardXDelta;
     float const slotYDeltaFactor;
-    // float const cardYDelta;
-    /////////////////////////////
-
     sf::Text dealerNamePlate;
     sf::Text player1NamePlate;
     sf::Text player2NamePlate;
@@ -110,17 +102,14 @@ class Game
     sf::Time dialogueDelay;
     sf::Time diaglogueRate;
     Deck Deck;
-    //eventually will receive list of players from user and store each player object inside a vector
     Player dealer{"Laylah"};
     Player p1{"Toby"};
     Player p2{"Lofi"};
     Player p3{"Cricket"};
-    
     std::vector<int> dealerSprites;
     std::vector<int> player1Sprites;
     std::vector<int> player2Sprites;
     std::vector<int> player3Sprites;
-    
     int const winningScore;
 };
 

@@ -6,12 +6,10 @@
 #include <SFML/Window.hpp>
 
 Game::Game()
-  :// mWindow(sf::VideoMode(800, 600), "sfml application"), 
+  :
     taskBarOffset{50},
     screenWidth{sf::VideoMode::getDesktopMode().width},
     screenHeight{sf::VideoMode::getDesktopMode().height},
-    // centerLeft{screenWidth / 2.f},
-    // centerRight{(screenHeight / 2.f) - taskBarOffset},
     centerPosition{screenWidth / 2.f, (screenHeight / 2.f) - taskBarOffset},
     dialogueBoxPosition{centerPosition.left, centerPosition.right + 350},
     buttonToHitPosition{centerPosition.left + 600, centerPosition.right + 400},
@@ -58,31 +56,23 @@ Game::Game()
 
 void Game::Run()
 {
-  loadCardTexturesToMap();
-  Deck.randomizeListOfCardKeys();
+  setupDeck();
   loadFont();
-  initDialogueBox();
-  initButtonToHit();
-  initButtonToStay();
-  initDealerNamePlate();
-  initPlayer1NamePlate();
-  initPlayer2NamePlate();
-  initPlayer3NamePlate();
+  initTextBoxes();
 
-  int countButtonToDrawClicks = 0;
   while(mWindow.isOpen()){
     updateGameLogic();
-    processEvents(countButtonToDrawClicks);
+    processEvents();
     timeSinceLastUpdate += clock.restart();
     while(timeSinceLastUpdate > TimePerFrame){
       timeSinceLastUpdate -= TimePerFrame;
-      processEvents(countButtonToDrawClicks);
+      processEvents();
     }
     render();
   }
 }
 
-void Game::processEvents(int & countButtonToDrawClicks)
+void Game::processEvents()
 {
   sf::Event event;
   while(mWindow.pollEvent(event)){
@@ -95,7 +85,6 @@ void Game::processEvents(int & countButtonToDrawClicks)
       if(rectangleHitCollision.contains(sf::Mouse::getPosition(mWindow)) && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         ButtonToHit.setFillColor(sf::Color::Blue);
         hitPressed = true;
-        countButtonToDrawClicks++;
       }
       else{
         ButtonToHit.setFillColor(sf::Color::Red);
@@ -104,7 +93,6 @@ void Game::processEvents(int & countButtonToDrawClicks)
       if(rectangleStayCollision.contains(sf::Mouse::getPosition(mWindow)) && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         ButtonToStay.setFillColor(sf::Color::Blue);
         stayPressed = true;
-        countButtonToDrawClicks++;
       }
       else{
         ButtonToStay.setFillColor(sf::Color::Red);
@@ -116,13 +104,6 @@ void Game::processEvents(int & countButtonToDrawClicks)
 void Game::render()
 {
   mWindow.clear();
-  // switch(State){
-  //   case init_drawFirstCards : 
-  //     mWindow.draw(mText);
-  //   case state2 : 
-  //     mWindow.draw(mText);
-  //     mWindow.draw(mText);
-  // }
   mWindow.draw(player3NamePlate);
   mWindow.draw(player2NamePlate);
   mWindow.draw(player1NamePlate);
@@ -166,8 +147,6 @@ void Game::updatePlayerBustToNamePlate()
   }
 }
 
-
-// void Game::updateDialogueBox(std::string_view message)
 void Game::updateDialogueBox()
 {
   diaglogueRate = dialogueClock.getElapsedTime();
@@ -226,7 +205,6 @@ void Game::updateDialogueBox()
         break;
     }
   }
-  // mDialogueBox.setFillColor(sf::Color::Red);
 }
 
 void Game::initPlayer3NamePlate()
@@ -237,7 +215,6 @@ void Game::initPlayer3NamePlate()
   player3NamePlate.setString(p3.getName());
   player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // player3NamePlate.setPosition(x_coordZero, y_coordZero+200);
   player3NamePlate.setPosition(player3NamePlatePosition.left, player3NamePlatePosition.right);
   player3NamePlate.setFillColor(sf::Color::Red);
 }
@@ -250,7 +227,6 @@ void Game::initPlayer2NamePlate()
   player2NamePlate.setString(p2.getName());
   player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // player2NamePlate.setPosition(x_coordZero+600, y_coordZero+200);
   player2NamePlate.setPosition(player2NamePlatePosition.left, player2NamePlatePosition.right);
   player2NamePlate.setFillColor(sf::Color::Red);
 }
@@ -263,7 +239,6 @@ void Game::initPlayer1NamePlate()
   player1NamePlate.setString(p1.getName());
   player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // player1NamePlate.setPosition(x_coordZero-600, y_coordZero+200);
   player1NamePlate.setPosition(player1NamePlatePosition.left, player1NamePlatePosition.right);
   player1NamePlate.setFillColor(sf::Color::Red);
 }
@@ -276,7 +251,6 @@ void Game::initDealerNamePlate()
   dealerNamePlate.setString(dealer.getName());
   dealerNamePlate.setOrigin(dealerNamePlate.getLocalBounds().left + dealerNamePlate.getLocalBounds().width/2, dealerNamePlate.getLocalBounds().top + dealerNamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // dealerNamePlate.setPosition(x_coordZero, y_coordZero-200);
   dealerNamePlate.setPosition(dealerNamePlatePosition.left, dealerNamePlatePosition.right);
   dealerNamePlate.setFillColor(sf::Color::Red);
 }
@@ -288,7 +262,6 @@ void Game::initDialogueBox()
   mDialogueBox.setString("Starting BlackJack\n");
   mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // mDialogueBox.setPosition(x_coordZero, y_coordZero + 400);
   mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
   mDialogueBox.setFillColor(sf::Color::Red);
 }
@@ -302,7 +275,6 @@ void Game::initButtonToStay()
   // ButtonToStay.setPosition(850,700);
   ButtonToStay.setOrigin(ButtonToStay.getLocalBounds().left + ButtonToStay.getLocalBounds().width/2, ButtonToStay.getLocalBounds().top + ButtonToStay.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // ButtonToStay.setPosition(x_coordZero - 600, y_coordZero + 400);
   ButtonToStay.setPosition(buttonToStayPosition.left, buttonToStayPosition.right);
   ButtonToStay.setFillColor(sf::Color::Red);
 }
@@ -315,41 +287,12 @@ void Game::initButtonToHit()
   // ButtonToStay.setPosition(850,700);
   ButtonToHit.setOrigin(ButtonToHit.getLocalBounds().left + ButtonToHit.getLocalBounds().width/2, ButtonToHit.getLocalBounds().top + ButtonToHit.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-  // ButtonToHit.setPosition(x_coordZero + 600, y_coordZero + 400);
   ButtonToHit.setPosition(buttonToHitPosition.left, buttonToHitPosition.right);
   ButtonToHit.setFillColor(sf::Color::Red);
 }
 
-// void Game::initDealerName()
-// {
-//
-//   #define x_coordZero screenWidth / 2.f
-//   //Position of ButtonToStay is set to the middle of the screen. taskBarOffset is used to compensate for the fact that sf::VideoMode::getDesktopMode().height acts as if taskbar is not there.
-//   #define y_coordZero (screenHeight / 2.f) - taskBarOffset
-//
-//   ButtonToHit.setFont(mFont);
-//   ButtonToHit.setString("Dealer XXX\n");
-//   ButtonToHit.setCharacterSize(48);
-//   // ButtonToStay.setPosition(850,700);
-//   ButtonToHit.setOrigin(ButtonToHit.getLocalBounds().left + ButtonToHit.getLocalBounds().width/2, ButtonToHit.getLocalBounds().top + ButtonToHit.getLocalBounds().height/2);
-//   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
-//   ButtonToHit.setPosition(x_coordZero + 600, y_coordZero + 400);
-//   ButtonToHit.setFillColor(sf::Color::Red);
-//
-//   #undef x_coordZero
-//   #undef y_coordZero
-// }
-
-// void Game::handleButtonToDrawInput(int & countButtonToDrawClicks){
-//   mText.setFillColor(sf::Color::Blue);
-//   updateSpritesFromTextureMapOfCards();
-//   updatePositionOfCardSprites(countButtonToDrawClicks);
-// }
-
 void Game::updatePositionOfCardSprites()
-{  /* |_|_|_|_|_|
-  ** |_|_|_|_|_| A 5x2 layout of sprites on window is made here. 
-  */
+{ 
   int spritesIDX = Deck.getIndex();
   int maxCardsPerRow = 3;
   cardsAsSprites[spritesIDX].setScale(slotScaleFactor, slotScaleFactor); // set slot scale regardless of slot number
@@ -439,19 +382,6 @@ void Game::updatePositionOfCardSprites()
         }
         break;
   }
-
-  // if(countButtonToDrawClicks >= 10){
-  //   std::cerr << "Program can only work for up to 10 cards\n";
-  //   exit(1);
-  // }
-  // if(countButtonToDrawClicks < 5){ // makde these deltas #dfineds contained in the functino itself, or constatn integers of the class that re members 
-  //   cardsAsSprites[countButtonToDrawClicks].setScale(slotScaleFactor, slotScaleFactor); // set slot scale regardless of slot number
-  //   cardsAsSprites[countButtonToDrawClicks].move(countButtonToDrawClicks * slotXDeltaFactor, 0.f); 
-  // }
-  // else{
-  //   cardsAsSprites[countButtonToDrawClicks].setScale(slotScaleFactor, slotScaleFactor); // set slot scale regardless of slot number
-  //   cardsAsSprites[countButtonToDrawClicks].move(countButtonToDrawClicks%5 * slotXDeltaFactor, slotYDeltaFactor); // only x movement for <= 5
-  // }
 }
 
 
@@ -462,7 +392,6 @@ void Game::updateSpritesFromTextureMapOfCards()
     std::cerr << "Failed to access map key/value pair";
     exit(1);
   }
-
   generateSprite(*found); 
 }
 
@@ -494,14 +423,6 @@ void Game::loadCardTexturesToMap()
   Deck.resetIndex();
 }
 
-// void Game::drawCard(Player & p)
-// {
-//   p.pushCardToHand(Deck.currentCardName());
-//   p.updateScore(Deck.currentCardValue());
-//   Deck.increaseIndex();
-// }
-
-// void Game::updateGameLogic(sf::Clock & dialogueClock, sf::Time & dialogueDelay, sf::Time & diaglogueRate, int & countButtonToDrawClicks)
 void Game::updateGameLogic()
 {
     switch(currentState)
@@ -512,67 +433,46 @@ void Game::updateGameLogic()
         break;
       case State::dealerFirstCardReveal:
         updateDialogueBox(); //<-- will go inside updateGameLogic() eventually
-        dealer.pushCardToHand(Deck.currentCardName());
-        dealer.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
-        Deck.increaseIndex();
+        drawCardsAndUpdateDeck(dealer);
         currentState = Game::State::dealFirstCardsToPlayers;
         break;
 
       case State::dealFirstCardsToPlayers:
         p1.setTurn(true);
-        p1.pushCardToHand(Deck.currentCardName());
-        p1.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p1);
         p1.setTurn(false);
         Deck.increaseIndex();
 
         p1.setTurn(true);
-        p1.pushCardToHand(Deck.currentCardName());
-        p1.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p1);
         p1.setTurn(false);
         Deck.increaseIndex();
         //
         p2.setTurn(true);
-        p2.pushCardToHand(Deck.currentCardName());
-        p2.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p2);
         p2.setTurn(false);
         Deck.increaseIndex();
 
         p2.setTurn(true);
-        p2.pushCardToHand(Deck.currentCardName());
-        p2.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p2);
         p2.setTurn(false);
         Deck.increaseIndex();
 
         p3.setTurn(true);
-        p3.pushCardToHand(Deck.currentCardName());
-        p3.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p3);
         p3.setTurn(false);
         Deck.increaseIndex();
+
         p3.setTurn(true);
-        p3.pushCardToHand(Deck.currentCardName());
-        p3.updateScore(Deck.currentCardValue());
-        updateSpritesFromTextureMapOfCards();
-        updatePositionOfCardSprites();
+        drawCardsAndUpdateDeck(p3);
         p3.setTurn(false);
         Deck.increaseIndex();
 
         currentState = State::evaluateEarlyBlackJack;
-        //Kicks off selection of actions in promptPlayerMoves state
-        p1.setTurn(true);
+
         break;
-      case State::evaluateEarlyBlackJack:
+      case State::evaluateEarlyBlackJack: // left off here
+        p1.setTurn(true);
         if(p1.isTurn()){
           if(p1.hasEarlyBlackJack()){
             updateDialogueBox();
@@ -668,4 +568,30 @@ void Game::updateGameLogic()
         }
         break;
     }
+}
+
+void Game::initTextBoxes()
+{
+  initDialogueBox();
+  initButtonToHit();
+  initButtonToStay();
+  initDealerNamePlate();
+  initPlayer1NamePlate();
+  initPlayer2NamePlate();
+  initPlayer3NamePlate();
+}
+
+void Game::setupDeck()
+{
+  loadCardTexturesToMap();
+  Deck.randomizeListOfCardKeys();
+}
+
+void Game::drawCardsAndUpdateDeck(Player & p)
+{
+  p.pushCardToHand(Deck.currentCardName());
+  p.updateScore(Deck.currentCardValue());
+  updateSpritesFromTextureMapOfCards();
+  updatePositionOfCardSprites();
+  Deck.increaseIndex();
 }
