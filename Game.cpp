@@ -441,37 +441,31 @@ void Game::updateGameLogic()
         p1.setTurn(true);
         drawCardsAndUpdateDeck(p1);
         p1.setTurn(false);
-        Deck.increaseIndex();
 
         p1.setTurn(true);
         drawCardsAndUpdateDeck(p1);
         p1.setTurn(false);
-        Deck.increaseIndex();
-        //
+      
         p2.setTurn(true);
         drawCardsAndUpdateDeck(p2);
         p2.setTurn(false);
-        Deck.increaseIndex();
 
         p2.setTurn(true);
         drawCardsAndUpdateDeck(p2);
         p2.setTurn(false);
-        Deck.increaseIndex();
 
         p3.setTurn(true);
         drawCardsAndUpdateDeck(p3);
         p3.setTurn(false);
-        Deck.increaseIndex();
 
         p3.setTurn(true);
         drawCardsAndUpdateDeck(p3);
         p3.setTurn(false);
-        Deck.increaseIndex();
 
         currentState = State::evaluateEarlyBlackJack;
 
         break;
-      case State::evaluateEarlyBlackJack: // left off here
+      case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
         p1.setTurn(true);
         if(p1.isTurn()){
           if(p1.hasEarlyBlackJack()){
