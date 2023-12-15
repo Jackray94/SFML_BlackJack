@@ -50,7 +50,9 @@ Game::Game()
     player1Sprites{std::vector<int>()},
     player2Sprites{std::vector<int>()},
     player3Sprites{std::vector<int>()},
-    winningScore{21}
+    winningScore{21},
+    earlyBlackJackOccuranceCount{0},
+    check_earlyBlackJackOccuranceCount{0}
 {
 }
 
@@ -165,12 +167,52 @@ void Game::updateDialogueBox()
         break;
       case State::dealFirstCardsToPlayers:
         break;
+      // case State::evaluateEarlyBlackJack:
+      //   if(p1.hasEarlyBlackJack()){
+      //     message << p1.getName() << " has 21 and has won.\n";
+      //     mDialogueBox.setString(message.str());
+      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+      //   }
+      //   else if(p2.hasEarlyBlackJack()){
+      //     message << p2.getName() << " has 21 and has won.\n";
+      //     mDialogueBox.setString(message.str());
+      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+      //   }
+      //   else if(p3.hasEarlyBlackJack()){
+      //     message << p3.getName() << " has 21 and has won.\n";
+      //     mDialogueBox.setString(message.str());
+      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+      //   }
+      //   break;
       case State::evaluateEarlyBlackJack:
-        if(p1.isTurn()){
+        while(dialogueClock.getElapsedTime() <= dialogueDelay){
+          //wait for 1 second
+        }
+        if(p1.hasEarlyBlackJack()){
           message << p1.getName() << " has 21 and has won.\n";
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+          dialogueClock.restart();
+          earlyBlackJackOccuranceCount++;
+        }
+        else if(p2.hasEarlyBlackJack()){
+          message << p2.getName() << " has 21 and has won.\n";
+          mDialogueBox.setString(message.str());
+          mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+          mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+          dialogueClock.restart();
+          earlyBlackJackOccuranceCount++;
+        }
+        else if(p3.hasEarlyBlackJack()){
+          message << p3.getName() << " has 21 and has won.\n";
+          mDialogueBox.setString(message.str());
+          mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
+          mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
+          earlyBlackJackOccuranceCount++;
         }
         break;
       case State::promptPlayerMoves:
@@ -462,94 +504,107 @@ void Game::updateGameLogic()
         drawCardsAndUpdateDeck(p3);
         p3.setTurn(false);
 
+        //P1 turn is set to kick off next state
+        p1.setTurn(true);
         currentState = State::evaluateEarlyBlackJack;
 
         break;
+      // case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
+      //   if(p1.isTurn() && p1.hasEarlyBlackJack()){
+      //     updateDialogueBox();
+      //     p1.setTurn(false);
+      //     p2.setTurn(true);
+      //   }
+      //   else if(p2.isTurn() && p2.hasEarlyBlackJack()){
+      //     updateDialogueBox();
+      //     p2.setTurn(false);
+      //     p3.setTurn(true);
+      //   }
+      //   else if(p3.isTurn() && p3.hasEarlyBlackJack()){
+      //     updateDialogueBox();
+      //     currentState = State::promptPlayerMoves;
+      //     p3.setTurn(false);
+      //     // kicks off next state
+      //     p1.setTurn(true);
+      //   }
       case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
-        p1.setTurn(true);
-        if(p1.isTurn()){
-          if(p1.hasEarlyBlackJack()){
-            updateDialogueBox();
-          }
+        if(!(p1.hasEarlyBlackJack() && p2.hasEarlyBlackJack() && p3.hasEarlyBlackJack())){
+          currentState = State::promptPlayerMoves;
         }
-        if(p2.isTurn()){
-          if(p2.hasEarlyBlackJack()){
-            updateDialogueBox();
-          }
+        else{
+          if(p1.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
+          if(p2.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
+          if(p3.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
+          dialogueClock.restart();
+          updateDialogueBox();
         }
-        if(p3.isTurn()){
-          if(p3.hasEarlyBlackJack()){
-            updateDialogueBox();
-          }
-        }
-        currentState = State::promptPlayerMoves;
       case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
-          if(p1.isTurn() && !p1.hasEarlyBlackJack()){
-            updateDialogueBox();
-            if(hitPressed){
-              p1.pushCardToHand(Deck.currentCardName());
-              p1.updateScore(Deck.currentCardValue());
-              updateSpritesFromTextureMapOfCards();
-              updatePositionOfCardSprites();
-              Deck.increaseIndex();
-              hitPressed = false;
-            }
-            if(stayPressed){
-              p1.setTurn(false);
-              p2.setTurn(true);
-              stayPressed = false;
-            }
-            if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
-              updatePlayerBustToNamePlate();
-              p1.setTurn(false);
-              p2.setTurn(true);
-            }
+        if(p1.isTurn() && !p1.hasEarlyBlackJack()){
+          updateDialogueBox();
+          if(hitPressed){
+            p1.pushCardToHand(Deck.currentCardName());
+            p1.updateScore(Deck.currentCardValue());
+            updateSpritesFromTextureMapOfCards();
+            updatePositionOfCardSprites();
+            Deck.increaseIndex();
+            hitPressed = false;
           }
-          else if(p2.isTurn() && !p2.hasEarlyBlackJack()){
-            updateDialogueBox();
-            if(hitPressed){
-              p2.pushCardToHand(Deck.currentCardName());
-              p2.updateScore(Deck.currentCardValue());
-              updateSpritesFromTextureMapOfCards();
-              updatePositionOfCardSprites();
-              Deck.increaseIndex();
-              hitPressed = false;
-            }
-            if (stayPressed){
-              p2.setTurn(false);
-              p3.setTurn(true);
-              stayPressed = false;
-            }
-            if(p2.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
-              updatePlayerBustToNamePlate();
-              p2.setTurn(false);
-              p3.setTurn(true);
-            }
+          if(stayPressed){
+            p1.setTurn(false);
+            p2.setTurn(true);
+            stayPressed = false;
           }
-          else if(p3.isTurn() && !p3.hasEarlyBlackJack()){
-            updateDialogueBox();
-            if(hitPressed){
-              p3.pushCardToHand(Deck.currentCardName());
-              p3.updateScore(Deck.currentCardValue());
-              updateSpritesFromTextureMapOfCards();
-              updatePositionOfCardSprites();
-              Deck.increaseIndex();
-              hitPressed = false;
-            }
-            if (stayPressed){
-              stayPressed = false;
-              p3.setTurn(false);
-              dealer.setTurn(true);
-            }
-            if(p3.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
-              updatePlayerBustToNamePlate();
-              p3.setTurn(false);
-              dealer.setTurn(true);
-            }
+          if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+            updatePlayerBustToNamePlate();
+            p1.setTurn(false);
+            p2.setTurn(true);
           }
-          if(dealer.isTurn()){
-            currentState = State::dealerFinalTurn;
+        }
+        else if(p2.isTurn() && !p2.hasEarlyBlackJack()){
+          updateDialogueBox();
+          if(hitPressed){
+            p2.pushCardToHand(Deck.currentCardName());
+            p2.updateScore(Deck.currentCardValue());
+            updateSpritesFromTextureMapOfCards();
+            updatePositionOfCardSprites();
+            Deck.increaseIndex();
+            hitPressed = false;
           }
+          if (stayPressed){
+            p2.setTurn(false);
+            p3.setTurn(true);
+            stayPressed = false;
+          }
+          if(p2.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+            updatePlayerBustToNamePlate();
+            p2.setTurn(false);
+            p3.setTurn(true);
+          }
+        }
+        else if(p3.isTurn() && !p3.hasEarlyBlackJack()){
+          updateDialogueBox();
+          if(hitPressed){
+            p3.pushCardToHand(Deck.currentCardName());
+            p3.updateScore(Deck.currentCardValue());
+            updateSpritesFromTextureMapOfCards();
+            updatePositionOfCardSprites();
+            Deck.increaseIndex();
+            hitPressed = false;
+          }
+          if (stayPressed){
+            stayPressed = false;
+            p3.setTurn(false);
+            dealer.setTurn(true);
+          }
+          if(p3.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+            updatePlayerBustToNamePlate();
+            p3.setTurn(false);
+            dealer.setTurn(true);
+          }
+        }
+        if(dealer.isTurn()){
+          currentState = State::dealerFinalTurn;
+        }
         break;
       case State::dealerFinalTurn:
         updateDialogueBox();
