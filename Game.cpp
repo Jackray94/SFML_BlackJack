@@ -4,6 +4,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window.hpp>
+#include <exception>
 
 Game::Game()
   :
@@ -44,15 +45,13 @@ Game::Game()
     timeSinceLastUpdate{sf::Time::Zero},
     TimePerFrame{sf::seconds(1.f/60.f)},
     dialogueClock{},
-    dialogueDelay{sf::seconds(1.0f)},
+    dialogueDelay{sf::seconds(1.5f)},
     diaglogueRate{},
     dealerSprites{std::vector<int>()},
     player1Sprites{std::vector<int>()},
     player2Sprites{std::vector<int>()},
     player3Sprites{std::vector<int>()},
-    winningScore{21},
-    earlyBlackJackOccuranceCount{0},
-    check_earlyBlackJackOccuranceCount{0}
+    winningScore{21}
 {
 }
 
@@ -191,28 +190,26 @@ void Game::updateDialogueBox()
         while(dialogueClock.getElapsedTime() <= dialogueDelay){
           //wait for 1 second
         }
-        if(p1.hasEarlyBlackJack()){
+        if(p1.hasEarlyBlackJack() && !p1.checkedEarlyBlackJack()){
           message << p1.getName() << " has 21 and has won.\n";
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-          dialogueClock.restart();
-          earlyBlackJackOccuranceCount++;
+          p1.updateEarlyBlackJackCheck(true);
         }
-        else if(p2.hasEarlyBlackJack()){
+        else if(p2.hasEarlyBlackJack() && !p2.checkedEarlyBlackJack()){
           message << p2.getName() << " has 21 and has won.\n";
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-          dialogueClock.restart();
-          earlyBlackJackOccuranceCount++;
+          p2.updateEarlyBlackJackCheck(true);
         }
-        else if(p3.hasEarlyBlackJack()){
+        else if(p3.hasEarlyBlackJack() && !p3.checkedEarlyBlackJack()){
           message << p3.getName() << " has 21 and has won.\n";
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-          earlyBlackJackOccuranceCount++;
+          p3.updateEarlyBlackJackCheck(true);
         }
         break;
       case State::promptPlayerMoves:
@@ -528,16 +525,26 @@ void Game::updateGameLogic()
       //     p1.setTurn(true);
       //   }
       case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
-        if(!(p1.hasEarlyBlackJack() && p2.hasEarlyBlackJack() && p3.hasEarlyBlackJack())){
+        if(!p1.hasEarlyBlackJack() && !p2.hasEarlyBlackJack() && !p3.hasEarlyBlackJack()){
           currentState = State::promptPlayerMoves;
         }
-        else{
-          if(p1.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
-          if(p2.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
-          if(p3.hasEarlyBlackJack()){check_earlyBlackJackOccuranceCount++;}
-          dialogueClock.restart();
+        else if(p1.hasEarlyBlackJack() && !p1.checkedEarlyBlackJack()){
           updateDialogueBox();
         }
+        else if(p2.hasEarlyBlackJack() && !p2.checkedEarlyBlackJack()){
+          updateDialogueBox();
+        }
+        else if(p3.hasEarlyBlackJack() && !p3.checkedEarlyBlackJack()){
+          updateDialogueBox();
+        }
+        else{
+          currentState = State::promptPlayerMoves;
+          dialogueClock.restart();
+          while(dialogueClock.getElapsedTime() <= 2.0f * dialogueDelay){
+            //wait for 2 second
+          }
+        }
+        break;
       case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
         if(p1.isTurn() && !p1.hasEarlyBlackJack()){
           updateDialogueBox();
@@ -560,6 +567,10 @@ void Game::updateGameLogic()
             p2.setTurn(true);
           }
         }
+        else if(p1.isTurn() && p1.hasEarlyBlackJack()){
+          p1.setTurn(false);
+          p2.setTurn(true);
+        }
         else if(p2.isTurn() && !p2.hasEarlyBlackJack()){
           updateDialogueBox();
           if(hitPressed){
@@ -580,6 +591,10 @@ void Game::updateGameLogic()
             p2.setTurn(false);
             p3.setTurn(true);
           }
+        }
+        else if(p2.isTurn() && p2.hasEarlyBlackJack()){
+          p2.setTurn(false);
+          p3.setTurn(true);
         }
         else if(p3.isTurn() && !p3.hasEarlyBlackJack()){
           updateDialogueBox();
@@ -602,7 +617,12 @@ void Game::updateGameLogic()
             dealer.setTurn(true);
           }
         }
-        if(dealer.isTurn()){
+        else if(p3.isTurn() && p3.hasEarlyBlackJack()){
+          p3.setTurn(false);
+          dealer.setTurn(true);
+        }
+        // if(dealer.isTurn()){
+        else if(dealer.isTurn()){
           currentState = State::dealerFinalTurn;
         }
         break;

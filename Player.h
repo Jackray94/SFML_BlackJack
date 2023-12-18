@@ -9,7 +9,9 @@
 class Player
 {
   public:
-    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}{}
+    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}, flagIfEarlyBlackJackHasBeenChecked{false}
+    {
+    }
 
     int getScore(){return Score;}
     void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
@@ -69,6 +71,8 @@ class Player
     bool requiredToHit(){return Score < 17;}
     void setTurn(bool x){myTurn = x;}
     std::string getName(){return Name;}
+    bool checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
+    void updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
 
   private:
     int Score;
@@ -78,6 +82,7 @@ class Player
     bool Bust;
     int const maxScore;
     bool myTurn;
+    bool flagIfEarlyBlackJackHasBeenChecked;
 };
 
 #endif

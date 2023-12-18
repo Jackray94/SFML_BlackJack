@@ -111,8 +111,6 @@ class Game
     std::vector<int> player2Sprites;
     std::vector<int> player3Sprites;
     int const winningScore;
-    int earlyBlackJackOccuranceCount;
-    int check_earlyBlackJackOccuranceCount;
 };
 
 #endif
