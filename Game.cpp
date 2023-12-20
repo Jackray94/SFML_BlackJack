@@ -5,6 +5,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window.hpp>
 #include <exception>
+#include <sstream>
 
 Game::Game()
   :
@@ -125,6 +126,29 @@ void Game::loadFont()
   }
 }
 
+void Game::updatePlayerEarlyBlackJackToNamePlate()
+{
+  std::ostringstream message;
+  if(p1.isTurn()){
+    message << p1.getName() << "\nBlackJack\n";
+    player1NamePlate.setString(message.str());
+    player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
+    player1NamePlate.setPosition(player1NamePlatePosition.left, player1NamePlatePosition.right);
+  }
+  else if(p2.isTurn()){
+    message << p2.getName() << "\nBlackJack\n";
+    player2NamePlate.setString(message.str());
+    player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
+    player2NamePlate.setPosition(player2NamePlatePosition.left, player2NamePlatePosition.right);
+  }
+  else if(p3.isTurn()){
+    message << p3.getName() << "\nBlackJack\n";
+    player3NamePlate.setString(message.str());
+    player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
+    player3NamePlate.setPosition(player3NamePlatePosition.left, player3NamePlatePosition.right);
+  }
+}
+
 void Game::updatePlayerBustToNamePlate()
 {
   std::ostringstream message;
@@ -134,13 +158,13 @@ void Game::updatePlayerBustToNamePlate()
     player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
     player1NamePlate.setPosition(player1NamePlatePosition.left, player1NamePlatePosition.right);
   }
-  if(p2.isTurn()){
+  else if(p2.isTurn()){
     message << p2.getName() << "\nBUST\n";
     player2NamePlate.setString(message.str());
     player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
     player2NamePlate.setPosition(player2NamePlatePosition.left, player2NamePlatePosition.right);
   }
-  if(p3.isTurn()){
+  else if(p3.isTurn()){
     message << p3.getName() << "\nBUST\n";
     player3NamePlate.setString(message.str());
     player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
@@ -568,6 +592,7 @@ void Game::updateGameLogic()
           }
         }
         else if(p1.isTurn() && p1.hasEarlyBlackJack()){
+          updatePlayerEarlyBlackJackToNamePlate();
           p1.setTurn(false);
           p2.setTurn(true);
         }
@@ -593,6 +618,7 @@ void Game::updateGameLogic()
           }
         }
         else if(p2.isTurn() && p2.hasEarlyBlackJack()){
+          updatePlayerEarlyBlackJackToNamePlate();
           p2.setTurn(false);
           p3.setTurn(true);
         }
@@ -618,6 +644,7 @@ void Game::updateGameLogic()
           }
         }
         else if(p3.isTurn() && p3.hasEarlyBlackJack()){
+          updatePlayerEarlyBlackJackToNamePlate();
           p3.setTurn(false);
           dealer.setTurn(true);
         }

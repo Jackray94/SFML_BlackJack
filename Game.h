@@ -52,6 +52,7 @@ class Game
     void initTextBoxes();
     void setupDeck();
     void drawCardsAndUpdateDeck(Player & p);
+    void updatePlayerEarlyBlackJackToNamePlate();
 
     struct Coordinate
     {
