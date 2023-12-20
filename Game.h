@@ -43,7 +43,6 @@ class Game
     void updateDialogueBox();
     void initDealerName();
     void initPlayerName();
-    void drawCard(Player & p);
     void initDealerNamePlate();
     void initPlayer1NamePlate();
     void updatePlayerBustToNamePlate();
@@ -94,7 +93,7 @@ class Game
     sf::Text ButtonToStay;
     bool hitPressed;
     bool stayPressed;
-   enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves, dealerFinalTurn};
+    enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves, dealerFinalTurn};
     State currentState;
     sf::Clock clock;
     sf::Time timeSinceLastUpdate;

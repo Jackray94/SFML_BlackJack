@@ -9,30 +9,35 @@
 class Player
 {
   public:
-    Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}, flagIfEarlyBlackJackHasBeenChecked{false}
-    {
-    }
+    Player(std::string_view givenName);
+    // Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}, flagIfEarlyBlackJackHasBeenChecked{false}
+    // {
+    // }
 
-    int getScore(){return Score;}
-    void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
-    int numberOfCardsInHand(){return static_cast<int>(Hand.size());}
-    void updateScore(int val)
-    {
-      //keep track of newly drawn Aces. Once score exceeds 21 if player has Aces then their Aces can equal 1 instead of 11(score minus 10)
-      if(val == 11){
-        aceCount++;
-      }
-      Score += val;
-      if(Score > maxScore){
-        if(aceCount == 0){
-          Bust = true;
-        }
-        else{
-          Score -= 10;
-          aceCount--;
-        }
-      }
-    }
+    int getScore() const;
+    // int getScore(){return Score;}
+    void pushCardToHand(std::string const & card);
+    // void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
+    int numberOfCardsInHand();
+    // int numberOfCardsInHand(){return static_cast<int>(Hand.size());}
+    void updateScore(int val);
+    // void updateScore(int val)
+    // {
+    //   //keep track of newly drawn Aces. Once score exceeds 21 if player has Aces then their Aces can equal 1 instead of 11(score minus 10)
+    //   if(val == 11){
+    //     aceCount++;
+    //   }
+    //   Score += val;
+    //   if(Score > maxScore){
+    //     if(aceCount == 0){
+    //       Bust = true;
+    //     }
+    //     else{
+    //       Score -= 10;
+    //       aceCount--;
+    //     }
+    //   }
+    // }
 
     std::string toSFTextSetString()
     {

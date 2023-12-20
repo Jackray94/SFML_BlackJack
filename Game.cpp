@@ -190,26 +190,6 @@ void Game::updateDialogueBox()
         break;
       case State::dealFirstCardsToPlayers:
         break;
-      // case State::evaluateEarlyBlackJack:
-      //   if(p1.hasEarlyBlackJack()){
-      //     message << p1.getName() << " has 21 and has won.\n";
-      //     mDialogueBox.setString(message.str());
-      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-      //   }
-      //   else if(p2.hasEarlyBlackJack()){
-      //     message << p2.getName() << " has 21 and has won.\n";
-      //     mDialogueBox.setString(message.str());
-      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-      //   }
-      //   else if(p3.hasEarlyBlackJack()){
-      //     message << p3.getName() << " has 21 and has won.\n";
-      //     mDialogueBox.setString(message.str());
-      //     mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-      //     mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
-      //   }
-      //   break;
       case State::evaluateEarlyBlackJack:
         while(dialogueClock.getElapsedTime() <= dialogueDelay){
           //wait for 1 second
@@ -274,10 +254,8 @@ void Game::initPlayer3NamePlate()
 {
   player3NamePlate.setFont(mFont);
   player3NamePlate.setCharacterSize(36);
-  // player3NamePlate.setString("Player 3\n");
   player3NamePlate.setString(p3.getName());
   player3NamePlate.setOrigin(player3NamePlate.getLocalBounds().left + player3NamePlate.getLocalBounds().width/2, player3NamePlate.getLocalBounds().top + player3NamePlate.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   player3NamePlate.setPosition(player3NamePlatePosition.left, player3NamePlatePosition.right);
   player3NamePlate.setFillColor(sf::Color::Red);
 }
@@ -286,7 +264,6 @@ void Game::initPlayer2NamePlate()
 {
   player2NamePlate.setFont(mFont);
   player2NamePlate.setCharacterSize(36);
-  // player2NamePlate.setString("Player 2\n");
   player2NamePlate.setString(p2.getName());
   player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
@@ -298,7 +275,6 @@ void Game::initPlayer1NamePlate()
 {
   player1NamePlate.setFont(mFont);
   player1NamePlate.setCharacterSize(36);
-  // player1NamePlate.setString("Player 1\n");
   player1NamePlate.setString(p1.getName());
   player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
@@ -310,7 +286,6 @@ void Game::initDealerNamePlate()
 {
   dealerNamePlate.setFont(mFont);
   dealerNamePlate.setCharacterSize(36);
-  // dealerNamePlate.setString("Dealer\n");
   dealerNamePlate.setString(dealer.getName());
   dealerNamePlate.setOrigin(dealerNamePlate.getLocalBounds().left + dealerNamePlate.getLocalBounds().width/2, dealerNamePlate.getLocalBounds().top + dealerNamePlate.getLocalBounds().height/2);
   // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
@@ -530,24 +505,6 @@ void Game::updateGameLogic()
         currentState = State::evaluateEarlyBlackJack;
 
         break;
-      // case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
-      //   if(p1.isTurn() && p1.hasEarlyBlackJack()){
-      //     updateDialogueBox();
-      //     p1.setTurn(false);
-      //     p2.setTurn(true);
-      //   }
-      //   else if(p2.isTurn() && p2.hasEarlyBlackJack()){
-      //     updateDialogueBox();
-      //     p2.setTurn(false);
-      //     p3.setTurn(true);
-      //   }
-      //   else if(p3.isTurn() && p3.hasEarlyBlackJack()){
-      //     updateDialogueBox();
-      //     currentState = State::promptPlayerMoves;
-      //     p3.setTurn(false);
-      //     // kicks off next state
-      //     p1.setTurn(true);
-      //   }
       case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
         if(!p1.hasEarlyBlackJack() && !p2.hasEarlyBlackJack() && !p3.hasEarlyBlackJack()){
           currentState = State::promptPlayerMoves;
@@ -585,7 +542,7 @@ void Game::updateGameLogic()
             p2.setTurn(true);
             stayPressed = false;
           }
-          if(p1.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+          if(p1.hasBust()){
             updatePlayerBustToNamePlate();
             p1.setTurn(false);
             p2.setTurn(true);
@@ -611,7 +568,7 @@ void Game::updateGameLogic()
             p3.setTurn(true);
             stayPressed = false;
           }
-          if(p2.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+          if(p2.hasBust()){
             updatePlayerBustToNamePlate();
             p2.setTurn(false);
             p3.setTurn(true);
@@ -637,7 +594,7 @@ void Game::updateGameLogic()
             p3.setTurn(false);
             dealer.setTurn(true);
           }
-          if(p3.hasBust()){ //LEFT OFF HERE <-- add a jump to new state at the end of if block, that updates dialogue box saying player lost and then updating the nameplate with a "...\\n(BUST)". Go back and apply htis to each player nameplate
+          if(p3.hasBust()){
             updatePlayerBustToNamePlate();
             p3.setTurn(false);
             dealer.setTurn(true);
@@ -648,7 +605,6 @@ void Game::updateGameLogic()
           p3.setTurn(false);
           dealer.setTurn(true);
         }
-        // if(dealer.isTurn()){
         else if(dealer.isTurn()){
           currentState = State::dealerFinalTurn;
         }
