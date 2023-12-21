@@ -46,15 +46,34 @@ void Player::updateScore(int val)
 }
 
 
+std::ostream& operator<<(std::ostream & out, Player const & p)
+{
+  out << p.Name << " has cards:\n";
+  for(std::size_t i = 0, e = p.Hand.size()-1; i != e; ++i){
+    out <<  p.Hand[i] << "/ ";
+  }
+  out << p.Hand[p.Hand.size()-1] << '\n';
+  out << "Score is " << p.Score << '\n';
+  if(p.hasBust() == true){
+    out << p.Name << " has Bust\n";
+  }
+  return out;
+}
 
+bool Player::hasEarlyBlackJack(){return Score == maxScore;}
 
+bool Player::hasBust()const {return Score > 21;}
 
+bool Player::isTurn() const{return myTurn;}
 
+bool Player::requiredToHit() const{return Score < 17;}
 
+void Player::setTurn(bool x){myTurn = x;}
 
+std::string Player::getName() const{return Name;}
 
+bool Player::checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
 
-
-
+void Player::updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
 
 #endif

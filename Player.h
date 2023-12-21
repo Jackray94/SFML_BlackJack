@@ -39,45 +39,45 @@ class Player
     //   }
     // }
 
-    std::string toSFTextSetString()
-    {
-      // std::string_view update{Name + "has Cards:\n"};
-      std::string update{Name + "has Cards:\n"};
-      //The '/' shouldn't follow the last element
-      for(std::size_t i = 0; i < Hand.size() - 1; ++i){
-        update +=  Hand[i] + "/ ";
-      }
-      update += Hand[Hand.size()-1] + '\n';
-      update += "Score is ";
-      update += Score + '\n';
-      if(Bust == true){
-        update += Name += " has Bust\n";
-      }
-      return update;
-    }
 
-    friend std::ostream& operator<<(std::ostream & out, Player const & p)
-    {
-      out << p.Name << " has cards:\n";
-      for(std::size_t i = 0, e = p.Hand.size()-1; i != e; ++i){
-        out <<  p.Hand[i] << "/ ";
-      }
-      out << p.Hand[p.Hand.size()-1] << '\n';
-      out << "Score is " << p.Score << '\n';
-      if(p.hasBust() == true){
-        out << p.Name << " has Bust\n";
-      }
-      return out;
-    }
+    friend std::ostream& operator<<(std::ostream & out, Player const & p);
+    // friend std::ostream& operator<<(std::ostream & out, Player const & p)
+    // {
+    //   out << p.Name << " has cards:\n";
+    //   for(std::size_t i = 0, e = p.Hand.size()-1; i != e; ++i){
+    //     out <<  p.Hand[i] << "/ ";
+    //   }
+    //   out << p.Hand[p.Hand.size()-1] << '\n';
+    //   out << "Score is " << p.Score << '\n';
+    //   if(p.hasBust() == true){
+    //     out << p.Name << " has Bust\n";
+    //   }
+    //   return out;
+    // }
 
-    bool hasEarlyBlackJack(){return Score == maxScore;}
-    bool hasBust()const {return Score > 21;}
-    bool isTurn(){return myTurn;}
-    bool requiredToHit(){return Score < 17;}
-    void setTurn(bool x){myTurn = x;}
-    std::string getName(){return Name;}
-    bool checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
-    void updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
+    bool hasEarlyBlackJack();
+    // bool hasEarlyBlackJack(){return Score == maxScore;}
+
+    bool hasBust() const;
+    // bool hasBust()const {return Score > 21;}
+
+    bool isTurn() const;
+    // bool isTurn(){return myTurn;}
+
+    bool requiredToHit() const;
+    // bool requiredToHit(){return Score < 17;}
+
+    void setTurn(bool x);
+    // void setTurn(bool x){myTurn = x;}
+
+    std::string getName() const;
+    // std::string getName(){return Name;}
+
+    bool checkedEarlyBlackJack() const;
+    // bool checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
+
+    void updateEarlyBlackJackCheck(bool status);
+    // void updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
 
   private:
     int Score;
