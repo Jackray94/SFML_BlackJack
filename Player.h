@@ -10,78 +10,39 @@ class Player
 {
   public:
     Player(std::string_view givenName);
-    // Player(std::string_view givenName) : Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}, flagIfEarlyBlackJackHasBeenChecked{false}
-    // {
-    // }
 
-    int getScore() const;
+    [[nodiscard]] int const & getScore() const;
     // int getScore(){return Score;}
+
     void pushCardToHand(std::string const & card);
     // void pushCardToHand(std::string const & card){Hand.emplace_back(card);}
-    int numberOfCardsInHand();
-    // int numberOfCardsInHand(){return static_cast<int>(Hand.size());}
-    void updateScore(int val);
-    // void updateScore(int val)
-    // {
-    //   //keep track of newly drawn Aces. Once score exceeds 21 if player has Aces then their Aces can equal 1 instead of 11(score minus 10)
-    //   if(val == 11){
-    //     aceCount++;
-    //   }
-    //   Score += val;
-    //   if(Score > maxScore){
-    //     if(aceCount == 0){
-    //       Bust = true;
-    //     }
-    //     else{
-    //       Score -= 10;
-    //       aceCount--;
-    //     }
-    //   }
-    // }
 
+    [[nodiscard]] int numberOfCardsInHand() const;
+    // int numberOfCardsInHand(){return static_cast<int>(Hand.size());}
+
+    void updateScore(int val);
 
     friend std::ostream& operator<<(std::ostream & out, Player const & p);
-    // friend std::ostream& operator<<(std::ostream & out, Player const & p)
-    // {
-    //   out << p.Name << " has cards:\n";
-    //   for(std::size_t i = 0, e = p.Hand.size()-1; i != e; ++i){
-    //     out <<  p.Hand[i] << "/ ";
-    //   }
-    //   out << p.Hand[p.Hand.size()-1] << '\n';
-    //   out << "Score is " << p.Score << '\n';
-    //   if(p.hasBust() == true){
-    //     out << p.Name << " has Bust\n";
-    //   }
-    //   return out;
-    // }
 
-    bool hasEarlyBlackJack();
-    // bool hasEarlyBlackJack(){return Score == maxScore;}
+    [[nodiscard]] bool hasEarlyBlackJack() const;
 
-    bool hasBust() const;
-    // bool hasBust()const {return Score > 21;}
+    [[nodiscard]] bool hasBust() const;
 
-    bool isTurn() const;
-    // bool isTurn(){return myTurn;}
+    [[nodiscard]] bool const & isTurn() const;
 
-    bool requiredToHit() const;
-    // bool requiredToHit(){return Score < 17;}
+    [[nodiscard]] bool requiredToHit() const;
 
     void setTurn(bool x);
-    // void setTurn(bool x){myTurn = x;}
 
-    std::string getName() const;
-    // std::string getName(){return Name;}
+    [[nodiscard]] std::string const & getName() const;
 
     bool checkedEarlyBlackJack() const;
-    // bool checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
 
     void updateEarlyBlackJackCheck(bool status);
-    // void updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
 
   private:
     int Score;
-    std::string Name;
+    std::string const Name;
     std::vector<std::string> Hand;
     int aceCount;
     bool Bust;

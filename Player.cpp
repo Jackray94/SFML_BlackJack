@@ -9,7 +9,7 @@ Player::Player(std::string_view givenName)
 {
 }
 
-int Player::getScore() const
+int const & Player::getScore() const
 {
   return Score;
 }
@@ -20,7 +20,7 @@ void Player::pushCardToHand(std::string const & card)
 }
 
 
-int Player::numberOfCardsInHand()
+int Player::numberOfCardsInHand() const
 {
   return static_cast<int>(Hand.size());
 }
@@ -60,17 +60,17 @@ std::ostream& operator<<(std::ostream & out, Player const & p)
   return out;
 }
 
-bool Player::hasEarlyBlackJack(){return Score == maxScore;}
+bool Player::hasEarlyBlackJack() const{return Score == maxScore;}
 
-bool Player::hasBust()const {return Score > 21;}
+bool Player::hasBust() const {return Score > 21;}
 
-bool Player::isTurn() const{return myTurn;}
+bool const & Player::isTurn() const {return myTurn;}
 
-bool Player::requiredToHit() const{return Score < 17;}
+bool Player::requiredToHit() const {return Score < 17;}
 
 void Player::setTurn(bool x){myTurn = x;}
 
-std::string Player::getName() const{return Name;}
+std::string const & Player::getName() const{return Name;}
 
 bool Player::checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
 

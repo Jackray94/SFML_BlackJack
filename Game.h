@@ -80,10 +80,6 @@ class Game
     std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;
     sf::Font mFont;
-    sf::Text mText;
-    float const slotScaleFactor;
-    float const slotXDeltaFactor;
-    float const slotYDeltaFactor;
     sf::Text dealerNamePlate;
     sf::Text player1NamePlate;
     sf::Text player2NamePlate;
@@ -95,21 +91,27 @@ class Game
     bool stayPressed;
     enum class State{init, dealerFirstCardReveal, dealFirstCardsToPlayers, evaluateEarlyBlackJack, promptPlayerMoves, dealerFinalTurn};
     State currentState;
+    float const slotScaleFactor;
+    float const slotXDeltaFactor;
+    float const slotYDeltaFactor;
     sf::Clock clock;
     sf::Time timeSinceLastUpdate;
     sf::Time TimePerFrame;
     sf::Clock dialogueClock;
     sf::Time dialogueDelay;
     sf::Time diaglogueRate;
+
     Deck Deck;
     Player dealer{"Laylah"};
     Player p1{"Toby"};
     Player p2{"Lofi"};
     Player p3{"Cricket"};
+
     std::vector<int> dealerSprites;
     std::vector<int> player1Sprites;
     std::vector<int> player2Sprites;
     std::vector<int> player3Sprites;
+
     int const winningScore;
 };
 

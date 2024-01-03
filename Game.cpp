@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
@@ -24,7 +25,7 @@ Game::Game()
     player1CardPlacement{player1NamePlatePosition.left, player1NamePlatePosition.right - 150},
     player2CardPlacement{player2NamePlatePosition.left, player2NamePlatePosition.right - 150},
     player3CardPlacement{player3NamePlatePosition.left, player2NamePlatePosition.right -150},
-    mWindow(sf::VideoMode(screenWidth, screenHeight), "sfml application"),
+    mWindow(sf::VideoMode(screenWidth, screenHeight), "BlackJack"),
     mapOfCardTextures{std::unordered_map<std::string, std::unique_ptr<sf::Texture>>()}, 
     listOfFileNames{filesInDirectory()},
     cardsAsSprites{},
@@ -81,8 +82,18 @@ void Game::processEvents()
     if(event.type == sf::Event::Closed){
       mWindow.close();
     }
-    sf::IntRect rectangleHitCollision(ButtonToHit.getPosition().x, ButtonToHit.getPosition().y, ButtonToHit.getGlobalBounds().width, ButtonToHit.getGlobalBounds().height);
-    sf::IntRect rectangleStayCollision(ButtonToStay.getPosition().x, ButtonToStay.getPosition().y, ButtonToStay.getGlobalBounds().width, ButtonToStay.getGlobalBounds().height);
+    sf::IntRect rectangleHitCollision(
+      (ButtonToHit.getPosition().x - ButtonToHit.getLocalBounds().width/2), 
+      (ButtonToHit.getPosition().y - ButtonToHit.getLocalBounds().height/2), 
+      (ButtonToHit.getLocalBounds().width), 
+      (ButtonToHit.getLocalBounds().height)
+    );
+    sf::IntRect rectangleStayCollision(
+      (ButtonToStay.getPosition().x - ButtonToStay.getLocalBounds().width/2), 
+      (ButtonToStay.getPosition().y - ButtonToStay.getLocalBounds().height/2), 
+      (ButtonToStay.getLocalBounds().width), 
+      (ButtonToStay.getLocalBounds().height)
+    );
     if(currentState == State::promptPlayerMoves){
       if(rectangleHitCollision.contains(sf::Mouse::getPosition(mWindow)) && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         ButtonToHit.setFillColor(sf::Color::Blue);
@@ -100,12 +111,16 @@ void Game::processEvents()
         ButtonToStay.setFillColor(sf::Color::Red);
       }
     }
+    else{
+      ButtonToHit.setFillColor(sf::Color::Red);
+      ButtonToStay.setFillColor(sf::Color::Red);
+    }
   }
 }
 
 void Game::render()
 {
-  mWindow.clear();
+  mWindow.clear(sf::Color::Green);
   mWindow.draw(player3NamePlate);
   mWindow.draw(player2NamePlate);
   mWindow.draw(player1NamePlate);
@@ -218,7 +233,6 @@ void Game::updateDialogueBox()
         break;
       case State::promptPlayerMoves:
         if(p1.isTurn()){
-          // mDialogueBox.setString("P1 do you hit or stay?\n");
           message << p1.getName() << " you have score of " << p1.getScore() << ".\n\nDo you want to Hit or Stay?";
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
@@ -226,14 +240,12 @@ void Game::updateDialogueBox()
         }
         if(p2.isTurn()){
           message << p2.getName() << " you have score of " << p2.getScore() << ".\n\nDo you want to Hit or Stay?";
-          // mDialogueBox.setString("P2 do you hit or stay?\n");
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
         }
         if(p3.isTurn()){
           message << p3.getName() << " you have score of " << p3.getScore() << ".\n\nDo you want to Hit or Stay?";
-          // mDialogueBox.setString("P3 do you hit or stay?\n");
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
@@ -241,7 +253,6 @@ void Game::updateDialogueBox()
         break;
       case State::dealerFinalTurn:
           message << dealer.getName() << " draws remaining cards\n";
-          // mDialogueBox.setString("P3 do you hit or stay?\n");
           mDialogueBox.setString(message.str());
           mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
           mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
@@ -266,7 +277,6 @@ void Game::initPlayer2NamePlate()
   player2NamePlate.setCharacterSize(36);
   player2NamePlate.setString(p2.getName());
   player2NamePlate.setOrigin(player2NamePlate.getLocalBounds().left + player2NamePlate.getLocalBounds().width/2, player2NamePlate.getLocalBounds().top + player2NamePlate.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   player2NamePlate.setPosition(player2NamePlatePosition.left, player2NamePlatePosition.right);
   player2NamePlate.setFillColor(sf::Color::Red);
 }
@@ -277,7 +287,6 @@ void Game::initPlayer1NamePlate()
   player1NamePlate.setCharacterSize(36);
   player1NamePlate.setString(p1.getName());
   player1NamePlate.setOrigin(player1NamePlate.getLocalBounds().left + player1NamePlate.getLocalBounds().width/2, player1NamePlate.getLocalBounds().top + player1NamePlate.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   player1NamePlate.setPosition(player1NamePlatePosition.left, player1NamePlatePosition.right);
   player1NamePlate.setFillColor(sf::Color::Red);
 }
@@ -288,7 +297,6 @@ void Game::initDealerNamePlate()
   dealerNamePlate.setCharacterSize(36);
   dealerNamePlate.setString(dealer.getName());
   dealerNamePlate.setOrigin(dealerNamePlate.getLocalBounds().left + dealerNamePlate.getLocalBounds().width/2, dealerNamePlate.getLocalBounds().top + dealerNamePlate.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   dealerNamePlate.setPosition(dealerNamePlatePosition.left, dealerNamePlatePosition.right);
   dealerNamePlate.setFillColor(sf::Color::Red);
 }
@@ -299,7 +307,6 @@ void Game::initDialogueBox()
   mDialogueBox.setCharacterSize(36);
   mDialogueBox.setString("Starting BlackJack\n");
   mDialogueBox.setOrigin(mDialogueBox.getLocalBounds().left + mDialogueBox.getLocalBounds().width/2, mDialogueBox.getLocalBounds().top + mDialogueBox.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   mDialogueBox.setPosition(dialogueBoxPosition.left, dialogueBoxPosition.right);
   mDialogueBox.setFillColor(sf::Color::Red);
 }
@@ -310,9 +317,7 @@ void Game::initButtonToStay()
   ButtonToStay.setFont(mFont);
   ButtonToStay.setString("Stay?\n");
   ButtonToStay.setCharacterSize(48);
-  // ButtonToStay.setPosition(850,700);
   ButtonToStay.setOrigin(ButtonToStay.getLocalBounds().left + ButtonToStay.getLocalBounds().width/2, ButtonToStay.getLocalBounds().top + ButtonToStay.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
   ButtonToStay.setPosition(buttonToStayPosition.left, buttonToStayPosition.right);
   ButtonToStay.setFillColor(sf::Color::Red);
 }
@@ -322,9 +327,8 @@ void Game::initButtonToHit()
   ButtonToHit.setFont(mFont);
   ButtonToHit.setString("Hit?\n");
   ButtonToHit.setCharacterSize(48);
-  // ButtonToStay.setPosition(850,700);
   ButtonToHit.setOrigin(ButtonToHit.getLocalBounds().left + ButtonToHit.getLocalBounds().width/2, ButtonToHit.getLocalBounds().top + ButtonToHit.getLocalBounds().height/2);
-  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text in the center of the screen. 
+  // A call to ButtonToStay.setPosition(x_coordZero, y_coordZero) would place text (its origin) at the center of the screen. 
   ButtonToHit.setPosition(buttonToHitPosition.left, buttonToHitPosition.right);
   ButtonToHit.setFillColor(sf::Color::Red);
 }
@@ -344,7 +348,7 @@ void Game::updatePositionOfCardSprites()
       cardsAsSprites[dealerSprites[0]].setPosition(dealerCardPlacement.left, dealerCardPlacement.right);
       break;
     case State::dealFirstCardsToPlayers:
-      if(p1.isTurn()){ // <-- left off here cleaning this portion up. After that, then do the same for p2 and p3, doing both states that make up player cards
+      if(p1.isTurn()){ 
         player1Sprites.push_back(spritesIDX);
         player1CardPlacement.left -= (player1Sprites.size() - 1) * slotXDeltaFactor / 2;
         for(int i = 0; i < player1Sprites.size(); i++){
@@ -441,15 +445,12 @@ void Game::generateSprite(std::pair<const std::string, std::unique_ptr<sf::Textu
 void Game::loadCardTexturesToMap()
 {
   int count = 0;
-  // loop through the 52 files. They're sorted alphabetically, and enums are made to match this sorted file vector for its vector of keys
-  // For each file name, create Texture object pointer and load each file.
-  for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
+  for(auto const & texture : listOfFileNames){
     auto ptr = std::make_unique<sf::Texture>();
     if(!ptr->loadFromFile(listOfFileNames[count])){
       std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
       exit(1);
     }
-    //insert each pair into map. Check insertion happened okay by true/false of .second of returned std::pair
     auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
     Deck.increaseIndex();
     if(!successfulPairFromInsertion.second){
@@ -458,6 +459,20 @@ void Game::loadCardTexturesToMap()
     }
     count++;
   }
+  // for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
+  //   auto ptr = std::make_unique<sf::Texture>();
+  //   if(!ptr->loadFromFile(listOfFileNames[count])){
+  //     std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
+  //     exit(1);
+  //   }
+  //   auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
+  //   Deck.increaseIndex();
+  //   if(!successfulPairFromInsertion.second){
+  //     std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
+  //     exit(1);
+  //   }
+  //   count++;
+  // }
   Deck.resetIndex();
 }
 
@@ -466,11 +481,11 @@ void Game::updateGameLogic()
     switch(currentState)
     {
       case State::init:
-        updateDialogueBox(); //<-- will go inside updateGameLogic() eventually
+        updateDialogueBox();
         currentState = Game::State::dealerFirstCardReveal;
         break;
       case State::dealerFirstCardReveal:
-        updateDialogueBox(); //<-- will go inside updateGameLogic() eventually
+        updateDialogueBox(); 
         drawCardsAndUpdateDeck(dealer);
         currentState = Game::State::dealFirstCardsToPlayers;
         break;
@@ -505,7 +520,7 @@ void Game::updateGameLogic()
         currentState = State::evaluateEarlyBlackJack;
 
         break;
-      case State::evaluateEarlyBlackJack: // left here last -> 12/13 --> need to check out bug of UB one early 21 occurs
+      case State::evaluateEarlyBlackJack: 
         if(!p1.hasEarlyBlackJack() && !p2.hasEarlyBlackJack() && !p3.hasEarlyBlackJack()){
           currentState = State::promptPlayerMoves;
         }
@@ -526,7 +541,7 @@ void Game::updateGameLogic()
           }
         }
         break;
-      case State::promptPlayerMoves: //<-- later on the stayButton selection will be used to control the loops that all of these steps will end up in
+      case State::promptPlayerMoves: 
         if(p1.isTurn() && !p1.hasEarlyBlackJack()){
           updateDialogueBox();
           if(hitPressed){
@@ -636,7 +651,6 @@ void Game::initTextBoxes()
 void Game::setupDeck()
 {
   loadCardTexturesToMap();
-  Deck.randomizeListOfCardKeys();
 }
 
 void Game::drawCardsAndUpdateDeck(Player & p)

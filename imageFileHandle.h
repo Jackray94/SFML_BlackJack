@@ -6,8 +6,8 @@
 #include <string>
 #include <algorithm>
 
-std::vector<std::string> filesInDirectory();
+[[nodiscard]] std::vector<std::string> filesInDirectory();
 
-int fileCount();
+[[nodiscard]] int fileCount();
 
 #endif

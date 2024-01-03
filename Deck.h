@@ -5,35 +5,28 @@
 class Deck
 {
   public:
-    Deck()
-      : deckOfCards{mapOfCards()}, listOfCardKeys{cardKeys()}, index{0}
-    {
-    }
+    Deck();
 
-    std::string currentCardName() const;
-    // std::string currentCardName(){return listOfCardKeys[index];}
+    // I think returning by value (vs. const value) is best here so RVO copy elision is not prevented. 
+    [[nodiscard]] std::string currentCardName() const;
 
-    int currentCardValue();
-    // int currentCardValue(){return deckOfCards[listOfCardKeys[index]];}
+    // I think returning by value (vs. const value) is best here so RVO copy elision is not prevented. 
+    [[nodiscard]] int currentCardValue() const;
 
     void increaseIndex();
-    // void increaseIndex(){index++;}
 
     void resetIndex();
-    // void resetIndex(){index = 0;}
 
-    int getIndex() const;
-    // int getIndex(){return index;}
+    // I believe returning by const reference is best whereever possible, to avoid copies.
+    [[nodiscard]] int const & getIndex() const;
 
-    void randomizeListOfCardKeys();
-    // void randomizeListOfCardKeys()
-    // {
-    //   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
-    //   std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
-    // }
+    // void randomizeListOfCardKeys();
     
   private:
-    std::unordered_map<std::string, int> deckOfCards;
+    // I believe the move ctor will be called when creating deckOfCards.
+    std::unordered_map<std::string, int const> deckOfCards;
+
+    // I believe the move ctor will be called here as well.
     std::vector<std::string> listOfCardKeys;
     int index;
 };
