@@ -651,6 +651,7 @@ void Game::initTextBoxes()
 void Game::setupDeck()
 {
   loadCardTexturesToMap();
+  Deck.randomizeListOfCardKeys();
 }
 
 void Game::drawCardsAndUpdateDeck(Player & p)

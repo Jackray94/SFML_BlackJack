@@ -12,7 +12,7 @@
 [[nodiscard]] std::vector<std::string> cardKeys();
 
 
-void randomizeListOfCardKeys(std::vector<std::string> & list);
+// void randomizeListOfCardKeys(std::vector<std::string> & list);
 
 
 // I want to const the key / value pair because values won't change for a deck of cards. I believe that the key (std::string) will default to const anyway, so really I should just const the value. Using std::unordered_map<key, T> const would do this as well.

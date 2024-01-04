@@ -20,7 +20,7 @@ class Deck
     // I believe returning by const reference is best whereever possible, to avoid copies.
     [[nodiscard]] int const & getIndex() const;
 
-    // void randomizeListOfCardKeys();
+    void randomizeListOfCardKeys();
     
   private:
     // I believe the move ctor will be called when creating deckOfCards.

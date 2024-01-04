@@ -1,10 +1,10 @@
 #include "Cards.h"
 
-void randomizeListOfCardKeys(std::vector<std::string> & list)
-{
-  static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
-  std::shuffle(list.begin(), list.end(), mt);
-}
+// void randomizeListOfCardKeys(std::vector<std::string> & list)
+// {
+//   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
+//   std::shuffle(list.begin(), list.end(), mt);
+// }
 
 std::vector<std::string> cardKeys()
 {
@@ -25,7 +25,7 @@ std::vector<std::string> cardKeys()
     "Queen of Clubs",  "Queen of Diamonds", "Queen of Hearts", "Queen of Spades"
   };
 
-  randomizeListOfCardKeys(list);
+  // randomizeListOfCardKeys(list);
 
   return list;
 }

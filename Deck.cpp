@@ -29,10 +29,10 @@ void Deck::resetIndex() {index = 0;}
 
 int const & Deck::getIndex() const {return index;}
 
-// void Deck::randomizeListOfCardKeys()
-// {
-//   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
-//   std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
-// }
+void Deck::randomizeListOfCardKeys()
+{
+  static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
+  std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
+}
 
 #endif
