@@ -1,5 +1,13 @@
 #include "Cards.h"
 
+Cards::Cards()
+  : cd{}, cardMap{std::unordered_map<std::string, CardData>()}
+{
+}
+
+/*
+#include "Cards.h"
+
 // void randomizeListOfCardKeys(std::vector<std::string> & list)
 // {
 //   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
@@ -145,3 +153,4 @@ std::unordered_map<std::string, int const> mapOfCards()
   // deck["Two of Hearts"] = 2;
   return deck;
 }
+*/

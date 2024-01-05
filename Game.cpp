@@ -651,6 +651,11 @@ void Game::initTextBoxes()
 void Game::setupDeck()
 {
   loadCardTexturesToMap();
+  // TODO --> Since i'm on dev branch with the goal of combining 2 std::unordered_maps<string, int> and std::unordered_maps<string, std::unique_ptr<sf::Texture>> into 1 std::unordered_map<std::string, newStructType>
+  //
+  // I think I'll put the new struct into Cards.h/.cpp -> will need to have score, std::unique_ptr<sf::Texture>
+  //
+  // If combining hash maps then Deck.cpp and Cards.cpp can combine, and from here I would call imageFile function to get list of file names / string keys
   Deck.randomizeListOfCardKeys();
 }
 

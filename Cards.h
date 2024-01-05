@@ -2,6 +2,44 @@
 #define CARDS_H
 
 #include <unordered_map>
+#include <string>
+
+class Cards
+{
+  public:
+    Cards();
+
+
+
+
+
+  private:
+    struct CardData
+    {
+      int Score;
+      //add others like texture
+    };
+
+    CardData cd;
+    std::unordered_map<std::string, CardData> cardMap;
+};
+
+
+
+
+
+
+
+
+
+#endif
+
+
+/*
+#ifndef CARDS_H
+#define CARDS_H
+
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <random>
@@ -22,3 +60,5 @@
 
 
 #endif
+
+*/
