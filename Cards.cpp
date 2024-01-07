@@ -1,7 +1,7 @@
 #include "Cards.h"
 
-Cards::Cards()
-  : cd{}, cardMap{std::unordered_map<std::string, CardData>()}
+Cards::Cards(int scr, std::unique_ptr<sf::Texture> ptr)
+  : Score{scr}, cardPicture{std::move(ptr)}
 {
 }
 

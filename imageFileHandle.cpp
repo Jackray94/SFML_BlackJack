@@ -21,7 +21,8 @@ std::vector<std::string> ListOfFilesInDirectory()
   const std::filesystem::path path{"./Media/Textures"};
 
   for(auto const & files : std::filesystem::directory_iterator(path)){
-    str = files.path().string();
+    // str = files.path().string();
+    str = files.path().stem();
     vecStr.push_back(str);
   }
 

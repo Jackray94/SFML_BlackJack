@@ -9,17 +9,12 @@
 class Cards
 {
   public:
-    Cards();
+    // I think the rule of zero here is preferred
+    Cards(int scr, std::unique_ptr<sf::Texture> ptr);
 
   private:
-    struct CardData
-    {
-      int Score;
-      std::unique_ptr<sf::Texture> cardPicture;
-    };
-
-    CardData cd;
-    std::unordered_map<std::string, CardData> cardMap;
+    int Score;
+    std::unique_ptr<sf::Texture> cardPicture;
 };
 
 

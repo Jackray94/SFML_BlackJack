@@ -19,10 +19,9 @@ class Deck
     void loadMapWithCardData();
 
   private:
-    void loadMapWithCardPNGTextures(std::string const & key);
-    void loadMapWithCardScore();
+    std::unique_ptr<sf::Texture> loadMapWithCardPNGTextures(std::string const & key);
+    int loadMapWithCardScore(std::string const & key);
 
-    Cards cards;
     std::vector<std::string> stringCardKeys;
     MapSCards deckOfCards;
 };
