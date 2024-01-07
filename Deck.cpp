@@ -1,7 +1,44 @@
-#ifndef DECK_H
-#define DECK_H
-
 #include "Deck.h"
+#include "imageFileHandle.h"
+
+Deck::Deck()
+  : cards{}, stringCardKeys{ListOfFilesInDirectory()}
+{
+}
+
+void Deck::loadMapWithCardData()
+{
+  int cardCount = 0;
+  for(auto const & texture : stringCardKeys){
+    loadMapWithCardPNGTextures(cardCount);
+    auto successfulPairFromInsertion = deckOfCards.insert(std::make_pair(stringCardKeys[cardCount], std::move(ptr))); 
+    Deck.increaseIndex();
+    if(!successfulPairFromInsertion.second){
+      std::cerr << "Failed to insert " << stringCardKeys[cardCount] << '\n';
+      exit(1);
+    }
+    cardCount++;
+  }
+  Deck.resetIndex();
+}
+
+void Deck::loadMapWithCardPNGTextures(std::string const & key)
+{
+  for(auto const & texture : stringCardKeys){
+    auto ptr = std::make_unique<sf::Texture>();
+    if(!ptr->loadFromFile(stringCardKeys[IDX])){
+      std::cerr << "Failed to open " << stringCardKeys[IDX] << '\n';
+      exit(1);
+    }
+  }
+}
+
+void Deck::loadMapWithCardScore()
+{
+  switch()
+}
+
+/*#include "Deck.h"
 
 Deck::Deck()
   : deckOfCards{mapOfCards()}, listOfCardKeys{cardKeys()}, index{0}
@@ -34,5 +71,4 @@ void Deck::randomizeListOfCardKeys()
   static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
   std::shuffle(listOfCardKeys.begin(), listOfCardKeys.end(), mt);
 }
-
-#endif
+*/

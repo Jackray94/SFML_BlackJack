@@ -1,23 +1,21 @@
 #ifndef CARDS_H
 #define CARDS_H
 
+#include <SFML/Graphics/Texture.hpp>
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 class Cards
 {
   public:
     Cards();
 
-
-
-
-
   private:
     struct CardData
     {
       int Score;
-      //add others like texture
+      std::unique_ptr<sf::Texture> cardPicture;
     };
 
     CardData cd;

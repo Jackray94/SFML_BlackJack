@@ -6,7 +6,7 @@
 #include <string>
 #include <algorithm>
 
-[[nodiscard]] std::vector<std::string> filesInDirectory();
+[[nodiscard]] std::vector<std::string> ListOfFilesInDirectory();
 
 [[nodiscard]] int fileCount();
 

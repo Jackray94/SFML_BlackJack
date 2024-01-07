@@ -13,7 +13,7 @@ int fileCount()
   return count;
 }
 
-std::vector<std::string> filesInDirectory()
+std::vector<std::string> ListOfFilesInDirectory()
 {
   auto vecStr = std::vector<std::string>();
   std::string str = " ";

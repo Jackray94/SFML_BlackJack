@@ -1,5 +1,5 @@
-#ifndef DECK_H
-#define DECK_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <iostream>
 #include <vector>

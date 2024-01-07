@@ -1,4 +1,37 @@
+#ifndef DECK_H
+#define DECK_H
+
 #include "Cards.h"
+#include "imageFileHandle.h"
+
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <iostream>
+
+using MapSCards = std::unordered_map<std::string, Cards>;
+
+class Deck
+{
+  public:
+    Deck();
+
+    void loadMapWithCardData();
+
+  private:
+    void loadMapWithCardPNGTextures(std::string const & key);
+    void loadMapWithCardScore();
+
+    Cards cards;
+    std::vector<std::string> stringCardKeys;
+    MapSCards deckOfCards;
+};
+
+
+#endif
+
+
+/*#include "Cards.h"
 #include <unordered_map>
 #include <algorithm>
 
@@ -30,4 +63,4 @@ class Deck
     std::vector<std::string> listOfCardKeys;
     int index;
 };
-
+*/

@@ -442,39 +442,40 @@ void Game::generateSprite(std::pair<const std::string, std::unique_ptr<sf::Textu
   cardsAsSprites.push_back(sf::Sprite(*kv.second));
 }
 
-void Game::loadCardTexturesToMap()
-{
-  int count = 0;
-  for(auto const & texture : listOfFileNames){
-    auto ptr = std::make_unique<sf::Texture>();
-    if(!ptr->loadFromFile(listOfFileNames[count])){
-      std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
-      exit(1);
-    }
-    auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
-    Deck.increaseIndex();
-    if(!successfulPairFromInsertion.second){
-      std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
-      exit(1);
-    }
-    count++;
-  }
-  // for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
-  //   auto ptr = std::make_unique<sf::Texture>();
-  //   if(!ptr->loadFromFile(listOfFileNames[count])){
-  //     std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
-  //     exit(1);
-  //   }
-  //   auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
-  //   Deck.increaseIndex();
-  //   if(!successfulPairFromInsertion.second){
-  //     std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
-  //     exit(1);
-  //   }
-  //   count++;
-  // }
-  Deck.resetIndex();
-}
+// void Game::loadCardTexturesToMap()
+// {
+//   int count = 0;
+//   for(auto const & texture : listOfFileNames){
+//     auto ptr = std::make_unique<sf::Texture>();
+//     if(!ptr->loadFromFile(listOfFileNames[count])){
+//       std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
+//       exit(1);
+//     }
+//     auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
+//     Deck.increaseIndex();
+//     if(!successfulPairFromInsertion.second){
+//       std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
+//       exit(1);
+//     }
+//     count++;
+//   }
+// /*  for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
+//     auto ptr = std::make_unique<sf::Texture>();
+//     if(!ptr->loadFromFile(listOfFileNames[count])){
+//       std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
+//       exit(1);
+//     }
+//     auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
+//     Deck.increaseIndex();
+//     if(!successfulPairFromInsertion.second){
+//       std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
+//       exit(1);
+//     }
+//     count++;
+//   }
+// */
+//   Deck.resetIndex();
+// }
 
 void Game::updateGameLogic()
 {
@@ -650,7 +651,8 @@ void Game::initTextBoxes()
 
 void Game::setupDeck()
 {
-  loadCardTexturesToMap();
+  Deck.loadMapWithCardPNGTextures();
+  // loadCardTexturesToMap(); <-- changed to happen inside Deck class
   // TODO --> Since i'm on dev branch with the goal of combining 2 std::unordered_maps<string, int> and std::unordered_maps<string, std::unique_ptr<sf::Texture>> into 1 std::unordered_map<std::string, newStructType>
   //
   // I think I'll put the new struct into Cards.h/.cpp -> will need to have score, std::unique_ptr<sf::Texture>

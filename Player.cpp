@@ -1,6 +1,3 @@
-#ifndef PLAYER_H
-#define PLAYER_H
-
 #include "Player.h"
 
 Player::Player(std::string_view givenName)
@@ -75,5 +72,3 @@ std::string const & Player::getName() const{return Name;}
 bool Player::checkedEarlyBlackJack() const {return (flagIfEarlyBlackJackHasBeenChecked == true);}
 
 void Player::updateEarlyBlackJackCheck(bool status) {flagIfEarlyBlackJackHasBeenChecked = status;}
-
-#endif
