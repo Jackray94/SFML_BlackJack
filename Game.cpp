@@ -431,41 +431,6 @@ void Game::updateSpritesFromTextureMapOfCards()
   cardsAsSprites.push_back(sf::Sprite(*found->second.cardPicture));
 }
 
-// void Game::loadCardTexturesToMap()
-// {
-//   int count = 0;
-//   for(auto const & texture : listOfFileNames){
-//     auto ptr = std::make_unique<sf::Texture>();
-//     if(!ptr->loadFromFile(listOfFileNames[count])){
-//       std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
-//       exit(1);
-//     }
-//     auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
-//     Deck.increaseIndex();
-//     if(!successfulPairFromInsertion.second){
-//       std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
-//       exit(1);
-//     }
-//     count++;
-//   }
-// /*  for(std::vector<std::string>::const_iterator i = listOfFileNames.begin(), e = listOfFileNames.end(); i != e; ++i){
-//     auto ptr = std::make_unique<sf::Texture>();
-//     if(!ptr->loadFromFile(listOfFileNames[count])){
-//       std::cerr << "Failed to open " << listOfFileNames[count] << '\n';
-//       exit(1);
-//     }
-//     auto successfulPairFromInsertion = mapOfCardTextures.insert(std::make_pair(Deck.currentCardName(), std::move(ptr))); 
-//     Deck.increaseIndex();
-//     if(!successfulPairFromInsertion.second){
-//       std::cerr << "Failed to insert " << listOfFileNames[count] << '\n';
-//       exit(1);
-//     }
-//     count++;
-//   }
-// */
-//   Deck.resetIndex();
-// }
-
 void Game::updateGameLogic()
 {
     switch(currentState)

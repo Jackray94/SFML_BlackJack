@@ -11,7 +11,7 @@ class Player
   public:
     Player(std::string_view givenName);
 
-    [[nodiscard]] int const & getScore() const;
+    [[nodiscard]] int getScore() const;
     // int getScore(){return Score;}
 
     void pushCardToHand(std::string const & card);

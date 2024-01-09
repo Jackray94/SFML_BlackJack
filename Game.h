@@ -5,8 +5,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-#include <bits/types/cookie_io_functions_t.h>
-#include <unordered_map>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -14,8 +12,6 @@
 #include <string_view>
 #include <memory>
 #include <algorithm>
-#include <random>
-#include <chrono>
 
 #include "imageFileHandle.h"
 #include "Deck.h"
@@ -31,8 +27,6 @@ class Game
     void processEvents();
     void render();
     void loadFont();
-    void handleButtonToDrawInput();
-    void loadCardTexturesToMap();
     void updateSpritesFromTextureMapOfCards();
     void updatePositionOfCardSprites();
     void updateGameLogic();
@@ -40,8 +34,6 @@ class Game
     void initButtonToStay();
     void initDialogueBox();
     void updateDialogueBox();
-    void initDealerName();
-    void initPlayerName();
     void initDealerNamePlate();
     void initPlayer1NamePlate();
     void updatePlayerBustToNamePlate();

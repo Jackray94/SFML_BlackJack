@@ -6,7 +6,7 @@ Player::Player(std::string_view givenName)
 {
 }
 
-int const & Player::getScore() const
+int Player::getScore() const
 {
   return Score;
 }

@@ -26,9 +26,7 @@ std::vector<std::string> ListOfFilesInDirectory()
     vecStr.push_back(str);
   }
 
-  std::sort(vecStr.begin(), vecStr.end()); // is this redundent? Haven't I changed this? Meaning, before my recent changes there was a need to sort because the source we copied this vector from would have been randomized. ???????
-  // ??????????????????
-  // Or, has this sort not been needed this whole time? shoudln't they be in order due to the file system being alphabetically ordered already????
+  std::sort(vecStr.begin(), vecStr.end());
 
   return vecStr;
 }
