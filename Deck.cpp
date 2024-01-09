@@ -37,58 +37,58 @@ std::unique_ptr<sf::Texture> Deck::loadMapWithCardPNGTextures(std::string const 
 int Deck::loadMapWithCardScore(std::string const & key)
 {
    
-  if(key == "Ace of Clubs"){return 11;}
-  else if(key == "Ace of Spades"){return 11;}
-  else if(key == "Ace of Diamonds"){return 11;}
-  else if(key == "Ace of Hearts"){return 11;}
-  else if(key == "King of Clubs"){return 10;}
-  else if(key == "King of Spades"){return 10;}
-  else if(key == "King of Diamonds"){return 10;}
-  else if(key == "King of Hearts"){return 10;}
-  else if(key == "Queen of Clubs"){return 10;}
-  else if(key == "Queen of Spades"){return 10;}
-  else if(key == "Queen of Diamonds"){return 10;}
-  else if(key == "Queen of Hearts"){return 10;}
-  else if(key == "Jack of Clubs"){return 10;}
-  else if(key == "Jack of Spades"){return 10;}
-  else if(key == "Jack of Diamonds"){return 10;}
-  else if(key == "Jack of Hearts"){return 10;}
-  else if(key == "Ten of Clubs"){return 10;}
-  else if(key == "Ten of Spades"){return 10;}
-  else if(key == "Ten of Diamonds"){return 10;}
-  else if(key == "Ten of Hearts"){return 10;}
-  else if(key == "Nine of Clubs"){return 9;}
-  else if(key == "Nine of Spades"){return 9;}
-  else if(key == "Nine of Diamonds"){return 9;}
-  else if(key == "Nine of Hearts"){return 9;}
-  else if(key == "Eight of Clubs"){return 8;}
-  else if(key == "Eight of Spades"){return 8;}
-  else if(key == "Eight of Diamonds"){return 8;}
-  else if(key == "Eight of Hearts"){return 8;}
-  else if(key == "Seven of Clubs"){return 7;}
-  else if(key == "Seven of Spades"){return 7;}
-  else if(key == "Seven of Diamonds"){return 7;}
-  else if(key == "Seven of Hearts"){return 7;}
-  else if(key == "Six of Clubs"){return 6;}
-  else if(key == "Six of Spades"){return 6;}
-  else if(key == "Six of Diamonds"){return 6;}
-  else if(key == "Six of Hearts"){return 6;}
-  else if(key == "Five of Clubs"){return 5;}
-  else if(key == "Five of Spades"){return 5;}
-  else if(key == "Five of Diamonds"){return 5;}
-  else if(key == "Five of Hearts"){return 5;}
-  else if(key == "Four of Clubs"){return 4;}
-  else if(key == "Four of Spades"){return 4;}
-  else if(key == "Four of Diamonds"){return 4;}
-  else if(key == "Four of Hearts"){return 4;}
-  else if(key == "Three of Clubs"){return 3;}
-  else if(key == "Three of Spades"){return 3;}
-  else if(key == "Three of Diamonds"){return 3;}
-  else if(key == "Three of Hearts"){return 3;}
-  else if(key == "Two of Clubs"){return 2;}
-  else if(key == "Two of Spades"){return 2;}
-  else if(key == "Two of Diamonds"){return 2;}
-  else if(key == "Two of Hearts"){return 2;}
+  if(key == "ace_of_clubs"){return 11;}
+  else if(key == "ace_of_spades"){return 11;}
+  else if(key == "ace_of_diamonds"){return 11;}
+  else if(key == "ace_of_hearts"){return 11;}
+  else if(key == "king_of_clubs"){return 10;}
+  else if(key == "king_of_spades"){return 10;}
+  else if(key == "king_of_diamonds"){return 10;}
+  else if(key == "king_of_hearts"){return 10;}
+  else if(key == "queen_of_clubs"){return 10;}
+  else if(key == "queen_of_spades"){return 10;}
+  else if(key == "queen_of_diamonds"){return 10;}
+  else if(key == "queen_of_hearts"){return 10;}
+  else if(key == "jack_of_clubs"){return 10;}
+  else if(key == "jack_of_spades"){return 10;}
+  else if(key == "jack_of_diamonds"){return 10;}
+  else if(key == "jack_of_hearts"){return 10;}
+  else if(key == "10_of_clubs"){return 10;}
+  else if(key == "10_of_spades"){return 10;}
+  else if(key == "10_of_diamonds"){return 10;}
+  else if(key == "10_of_hearts"){return 10;}
+  else if(key == "9_of_clubs"){return 9;}
+  else if(key == "9_of_spades"){return 9;}
+  else if(key == "9_of_diamonds"){return 9;}
+  else if(key == "9_of_hearts"){return 9;}
+  else if(key == "8_of_clubs"){return 8;}
+  else if(key == "8_of_spades"){return 8;}
+  else if(key == "8_of_diamonds"){return 8;}
+  else if(key == "8_of_hearts"){return 8;}
+  else if(key == "7_of_clubs"){return 7;}
+  else if(key == "7_of_spades"){return 7;}
+  else if(key == "7_of_diamonds"){return 7;}
+  else if(key == "7_of_hearts"){return 7;}
+  else if(key == "6_of_clubs"){return 6;}
+  else if(key == "6_of_spades"){return 6;}
+  else if(key == "6_of_diamonds"){return 6;}
+  else if(key == "6_of_hearts"){return 6;}
+  else if(key == "5_of_clubs"){return 5;}
+  else if(key == "5_of_spades"){return 5;}
+  else if(key == "5_of_diamonds"){return 5;}
+  else if(key == "5_of_hearts"){return 5;}
+  else if(key == "4_of_clubs"){return 4;}
+  else if(key == "4_of_spades"){return 4;}
+  else if(key == "4_of_diamonds"){return 4;}
+  else if(key == "4_of_hearts"){return 4;}
+  else if(key == "3_of_clubs"){return 3;}
+  else if(key == "3_of_spades"){return 3;}
+  else if(key == "3_of_diamonds"){return 3;}
+  else if(key == "3_of_hearts"){return 3;}
+  else if(key == "2_of_clubs"){return 2;}
+  else if(key == "2_of_spades"){return 2;}
+  else if(key == "2_of_diamonds"){return 2;}
+  else {return 2;}
 }
 
 void Deck::randomizeListOfCardKeys()
@@ -127,7 +127,7 @@ MapSCards::const_iterator Deck::foundCard()
 {
   // I think that because I contorl the setup I don't need to check if past-the-end iterator but am doing it here anyway.
   auto found = deckOfCards.find(stringCardKeys[index]);
-  if(found != deckOfCards.end()){
+  if(found == deckOfCards.end()){
     std::cerr << "Failed to access map key/value pair";
     exit(1);
   }
