@@ -28,7 +28,7 @@ std::unique_ptr<sf::Texture> Deck::loadMapWithCardPNGTextures(std::string const 
   auto ptr = std::make_unique<sf::Texture>();
   if(!ptr->loadFromFile("./Media/Textures" + key + ".png")){
     std::cerr << "Failed to open " << key << '\n';
-    exit(1);
+    // exit(1);
   }
   //I believe this return will cause NRVO (instead of RVO) which does not guarentee elision. If NRVO doesn't happen then move ctor should be called anyway. 
   return ptr;
