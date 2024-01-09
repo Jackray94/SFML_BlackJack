@@ -2,7 +2,7 @@
 #include "imageFileHandle.h"
 
 Deck::Deck()
-  : stringCardKeys{ListOfFilesInDirectory()}
+  : stringCardKeys{ListOfFilesInDirectory()}, deckOfCards{MapSCards()}, index{0}
 {
 }
 
@@ -89,6 +89,49 @@ int Deck::loadMapWithCardScore(std::string const & key)
   else if(key == "Two of Spades"){return 2;}
   else if(key == "Two of Diamonds"){return 2;}
   else if(key == "Two of Hearts"){return 2;}
+}
+
+void Deck::randomizeListOfCardKeys()
+{
+  static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
+  std::shuffle(stringCardKeys.begin(), stringCardKeys.end(), mt);
+}
+
+// Since I can't return by const reference, I believe it is preferred to even still avoid returning by const value. This is because you want to allow for RVO (return value optimization) copy elision - never return by const value because you can screw up copy elision (meaning using const can prevent move semantics (copy elision)) 
+std::string Deck::currentCardName() const
+{
+  return stringCardKeys[index];
+}
+
+
+int Deck::currentCardValue() const
+{
+  //I can't use std::unordered_map::operater[] with const. (Unrelated, now that I changed stuff up, but good to know.) Also I control the setup which ensures there will not be a need to check if past-the-end iterator is returned (i.e. key not found).
+  auto found = deckOfCards.find(stringCardKeys[index]);
+  if(found != deckOfCards.end()){
+    return found->second.Score;
+  }
+  else{
+    std::cerr << "Failed to access map key/value pair.\n";
+    exit(1);
+  }
+}
+
+void Deck::increaseIndex() {index++;}
+
+void Deck::resetIndex() {index = 0;}
+
+int const & Deck::getIndex() const {return index;}
+
+MapSCards::const_iterator Deck::foundCard()
+{
+  // I think that because I contorl the setup I don't need to check if past-the-end iterator but am doing it here anyway.
+  auto found = deckOfCards.find(stringCardKeys[index]);
+  if(found != deckOfCards.end()){
+    std::cerr << "Failed to access map key/value pair";
+    exit(1);
+  }
+  return found;
 }
 
 /*#include "Deck.h"

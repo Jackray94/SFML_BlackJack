@@ -34,7 +34,6 @@ class Game
     void handleButtonToDrawInput();
     void loadCardTexturesToMap();
     void updateSpritesFromTextureMapOfCards();
-    void generateSprite(std::pair<const std::string, std::unique_ptr<sf::Texture>> & kv);
     void updatePositionOfCardSprites();
     void updateGameLogic();
     void initButtonToHit();
@@ -76,8 +75,6 @@ class Game
     Coordinate player2CardPlacement;
     Coordinate player3CardPlacement;
     sf::RenderWindow mWindow;
-    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> mapOfCardTextures;
-    std::vector<std::string> listOfFileNames;
     std::vector<sf::Sprite> cardsAsSprites;
     sf::Font mFont;
     sf::Text dealerNamePlate;

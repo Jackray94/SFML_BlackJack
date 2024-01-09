@@ -8,6 +8,7 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <random>
 
 using MapSCards = std::unordered_map<std::string, Cards>;
 
@@ -18,12 +19,30 @@ class Deck
 
     void loadMapWithCardData();
 
+    void randomizeListOfCardKeys();
+
+    [[nodiscard]] MapSCards::const_iterator foundCard();
+
+    // I think returning by value (vs. const value) is best here so RVO copy elision is not prevented. 
+    [[nodiscard]] std::string currentCardName() const;
+
+    // I think returning by value (vs. const value) is best here so RVO copy elision is not prevented. 
+    [[nodiscard]] int currentCardValue() const;
+
+    void increaseIndex();
+
+    void resetIndex();
+
+    // I believe returning by const reference is best whereever possible, to avoid copies.
+    [[nodiscard]] int const & getIndex() const;
+
   private:
-    std::unique_ptr<sf::Texture> loadMapWithCardPNGTextures(std::string const & key);
-    int loadMapWithCardScore(std::string const & key);
+    [[nodiscard]] std::unique_ptr<sf::Texture> loadMapWithCardPNGTextures(std::string const & key);
+    [[nodiscard]] int loadMapWithCardScore(std::string const & key);
 
     std::vector<std::string> stringCardKeys;
     MapSCards deckOfCards;
+    int index;
 };
 
 

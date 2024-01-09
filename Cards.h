@@ -11,8 +11,6 @@ class Cards
   public:
     // I think the rule of zero here is preferred
     Cards(int scr, std::unique_ptr<sf::Texture> ptr);
-
-  private:
     int Score;
     std::unique_ptr<sf::Texture> cardPicture;
 };

@@ -26,8 +26,6 @@ Game::Game()
     player2CardPlacement{player2NamePlatePosition.left, player2NamePlatePosition.right - 150},
     player3CardPlacement{player3NamePlatePosition.left, player2NamePlatePosition.right -150},
     mWindow(sf::VideoMode(screenWidth, screenHeight), "BlackJack"),
-    mapOfCardTextures{std::unordered_map<std::string, std::unique_ptr<sf::Texture>>()}, 
-    listOfFileNames{filesInDirectory()},
     cardsAsSprites{},
     mFont{},
     dealerNamePlate{},
@@ -429,17 +427,8 @@ void Game::updatePositionOfCardSprites()
 
 void Game::updateSpritesFromTextureMapOfCards()
 {
-  auto found = mapOfCardTextures.find(Deck.currentCardName());
-  if(found == mapOfCardTextures.end()){
-    std::cerr << "Failed to access map key/value pair";
-    exit(1);
-  }
-  generateSprite(*found); 
-}
-
-void Game::generateSprite(std::pair<const std::string, std::unique_ptr<sf::Texture>> & kv)
-{
-  cardsAsSprites.push_back(sf::Sprite(*kv.second));
+  auto found = Deck.foundCard();
+  cardsAsSprites.push_back(sf::Sprite(*found->second.cardPicture));
 }
 
 // void Game::loadCardTexturesToMap()
@@ -651,13 +640,7 @@ void Game::initTextBoxes()
 
 void Game::setupDeck()
 {
-  Deck.loadMapWithCardPNGTextures();
-  // loadCardTexturesToMap(); <-- changed to happen inside Deck class
-  // TODO --> Since i'm on dev branch with the goal of combining 2 std::unordered_maps<string, int> and std::unordered_maps<string, std::unique_ptr<sf::Texture>> into 1 std::unordered_map<std::string, newStructType>
-  //
-  // I think I'll put the new struct into Cards.h/.cpp -> will need to have score, std::unique_ptr<sf::Texture>
-  //
-  // If combining hash maps then Deck.cpp and Cards.cpp can combine, and from here I would call imageFile function to get list of file names / string keys
+  Deck.loadMapWithCardData();
   Deck.randomizeListOfCardKeys();
 }
 
