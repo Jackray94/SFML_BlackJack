@@ -26,7 +26,7 @@ void Deck::loadMapWithCardData()
 std::unique_ptr<sf::Texture> Deck::loadMapWithCardPNGTextures(std::string const & key)
 {
   auto ptr = std::make_unique<sf::Texture>();
-  if(!ptr->loadFromFile("./Media/Textures" + key + ".png")){
+  if(!ptr->loadFromFile("./Media/Textures/" + key + ".png")){
     std::cerr << "Failed to open " << key << '\n';
     // exit(1);
   }
