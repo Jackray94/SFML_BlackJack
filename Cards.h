@@ -1,10 +1,13 @@
 #ifndef CARDS_H
 #define CARDS_H
 
+
 #include <SFML/Graphics/Texture.hpp>
 #include <unordered_map>
 #include <string>
 #include <memory>
+
+namespace bj{
 
 class Cards
 {
@@ -14,5 +17,8 @@ class Cards
     int Score;
     std::unique_ptr<sf::Texture> cardPicture;
 };
+
+} // namesapce bj
+
 
 #endif

@@ -41,7 +41,7 @@ class Game
     void initPlayer3NamePlate();
     void initTextBoxes();
     void setupDeck();
-    void drawCardsAndUpdateDeck(Player & p);
+    void drawCardsAndUpdateDeck(bj::Player & p);
     void updatePlayerEarlyBlackJackToNamePlate();
 
     struct Coordinate
@@ -90,11 +90,11 @@ class Game
     sf::Time dialogueDelay;
     sf::Time diaglogueRate;
 
-    Deck Deck;
-    Player dealer{"Laylah"};
-    Player p1{"Toby"};
-    Player p2{"Lofi"};
-    Player p3{"Cricket"};
+    bj::Deck Deck;
+    bj::Player dealer{"Laylah"};
+    bj::Player p1{"Toby"};
+    bj::Player p2{"Lofi"};
+    bj::Player p3{"Cricket"};
 
     std::vector<int> dealerSprites;
     std::vector<int> player1Sprites;

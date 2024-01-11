@@ -1,5 +1,7 @@
 #include "Player.h"
 
+using bj::Player;
+
 Player::Player(std::string_view givenName)
   :
     Score{0}, Name{givenName}, Hand{std::vector<std::string>()}, aceCount{0}, Bust{false}, maxScore{21}, myTurn{false}, flagIfEarlyBlackJackHasBeenChecked{false}
@@ -43,7 +45,7 @@ void Player::updateScore(int val)
 }
 
 
-std::ostream& operator<<(std::ostream & out, Player const & p)
+std::ostream& bj::operator<<(std::ostream & out, Player const & p)
 {
   out << p.Name << " has cards:\n";
   for(std::size_t i = 0, e = p.Hand.size()-1; i != e; ++i){

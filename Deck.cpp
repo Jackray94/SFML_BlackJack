@@ -1,12 +1,16 @@
 #include "Deck.h"
 #include "imageFileHandle.h"
 
-Deck::Deck()
+using bj::Deck;
+
+// Deck::Deck()
+bj::Deck::Deck()
   : stringCardKeys{ListOfFilesInDirectory()}, deckOfCards{MapSCards()}, index{0}
 {
 }
 
-void Deck::loadMapWithCardData()
+// void Deck::loadMapWithCardData()
+void bj::Deck::loadMapWithCardData()
 {
   int cardCount = 0;
   for(auto const & texture : stringCardKeys){
@@ -123,7 +127,7 @@ void Deck::resetIndex() {index = 0;}
 
 int Deck::getIndex() const {return index;}
 
-MapSCards::const_iterator Deck::foundCard()
+bj::MapSCards::const_iterator Deck::foundCard()
 {
   // I think that because I contorl the setup I don't need to check if past-the-end iterator but am doing it here anyway.
   auto found = deckOfCards.find(stringCardKeys[index]);

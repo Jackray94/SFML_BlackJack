@@ -1,10 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+
 #include <iostream>
 #include <vector>
 #include <string_view>
 #include <string>
+
+namespace bj{
 
 class Player
 {
@@ -50,5 +53,8 @@ class Player
     bool myTurn;
     bool flagIfEarlyBlackJackHasBeenChecked;
 };
+
+} // namespace bj
+
 
 #endif

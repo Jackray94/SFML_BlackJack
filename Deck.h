@@ -10,6 +10,8 @@
 #include <iostream>
 #include <random>
 
+namespace bj{
+
 using MapSCards = std::unordered_map<std::string, Cards>;
 
 class Deck
@@ -44,6 +46,8 @@ class Deck
     MapSCards deckOfCards;
     int index;
 };
+
+} //namespace bj
 
 
 #endif

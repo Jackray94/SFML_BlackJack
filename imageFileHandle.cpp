@@ -1,5 +1,7 @@
 #include "imageFileHandle.h"
 
+namespace bj{
+
 int fileCount()
 {
   int count = 0;
@@ -30,3 +32,5 @@ std::vector<std::string> ListOfFilesInDirectory()
 
   return vecStr;
 }
+
+} // namespace bj

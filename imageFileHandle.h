@@ -6,8 +6,12 @@
 #include <string>
 #include <algorithm>
 
+namespace bj{
+
 [[nodiscard]] std::vector<std::string> ListOfFilesInDirectory();
 
 [[nodiscard]] int fileCount();
+
+} // namespace bj
 
 #endif

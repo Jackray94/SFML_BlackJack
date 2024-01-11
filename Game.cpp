@@ -609,7 +609,7 @@ void Game::setupDeck()
   Deck.randomizeListOfCardKeys();
 }
 
-void Game::drawCardsAndUpdateDeck(Player & p)
+void Game::drawCardsAndUpdateDeck(bj::Player & p)
 {
   p.pushCardToHand(Deck.currentCardName());
   p.updateScore(Deck.currentCardValue());
